@@ -40,6 +40,8 @@ public class DBInitializeProperties {
                             "PRICE INTEGER, " +
                             "PHONE varchar(30), " +
                             "REPAIRS varchar(30), " +
+                            "LAT REAL, " +
+                            "LNG REAL, " +
                             "ADDRESS varchar(30))");
             statement.executeUpdate(
                     "CREATE TABLE COMPLEXES(" +

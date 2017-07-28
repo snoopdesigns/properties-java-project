@@ -1,6 +1,10 @@
 package org.snoopdesigns.props.parser;
 
+import java.io.IOException;
+
 import com.google.code.geocoder.Geocoder;
+import com.google.code.geocoder.model.GeocodeResponse;
+import com.google.code.geocoder.model.GeocoderRequest;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -66,12 +70,16 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
         logger.info("Complex id: " + complexId);
         String cianId = url.substring(url.indexOf("flat/") + 5, url.length()-1);
 
-        /*try {
-            GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(addrElement.text(), "RU"));
+        Float lat = null;
+        Float lng = null;
+        try {
+            GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(address, "RU"));
             System.out.println(resp.getResults().get(0).getGeometry().getLocation());
+            lat = resp.getResults().get(0).getGeometry().getLocation().getLat().floatValue();
+            lng = resp.getResults().get(0).getGeometry().getLocation().getLng().floatValue();
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
-        return new Apartment(cianId, complexId, url, floor, ht, st, ta, ra, la, wins, tel, rep, price, address);
+        }
+        return new Apartment(cianId, complexId, url, floor, ht, st, ta, ra, la, wins, tel, rep, price, address, lat, lng);
     }
 }

@@ -65,12 +65,18 @@ public class Apartment {
     @Column(name = "ADDRESS")
     private String address;
 
+    @Column(name = "LAT")
+    private Float lat;
+
+    @Column(name = "LNG")
+    private Float lng;
+
     public Apartment() {
     }
 
     public Apartment(String cianId, Integer complexId, String url, FloorInfo floorInfo, String houseType,
-                     String sellType, Float totalArea, Float roomsArea, Float livingArea, String window, String
-                             phone, String repairs, Integer price, String address) {
+                     String sellType, Float totalArea, Float roomsArea, Float livingArea, String window, String phone,
+                     String repairs, Integer price, String address, Float lat, Float lng) {
         this.cianId = cianId;
         this.complexId = complexId;
         this.url = url;
@@ -85,6 +91,8 @@ public class Apartment {
         this.repairs = repairs;
         this.price = price;
         this.address = address;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public Long getId() {
@@ -205,5 +213,21 @@ public class Apartment {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Float getLat() {
+        return lat;
+    }
+
+    public void setLat(Float lat) {
+        this.lat = lat;
+    }
+
+    public Float getLng() {
+        return lng;
+    }
+
+    public void setLng(Float lng) {
+        this.lng = lng;
     }
 }
