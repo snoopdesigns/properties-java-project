@@ -22,7 +22,6 @@ public class TestController {
     @RequestMapping("/")
     public String index() throws Exception {
         logger.info("FUUUUUU");
-        //return "FUUU";
         return dataLoader.loadData();
     }
 
