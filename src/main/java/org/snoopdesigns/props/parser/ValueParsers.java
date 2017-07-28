@@ -1,5 +1,7 @@
 package org.snoopdesigns.props.parser;
 
+import org.snoopdesigns.props.persistence.entities.FloorInfo;
+
 public class ValueParsers {
 
     public static final ValueParser<FloorInfo> FLOOR_PARSER = new ValueParser<FloorInfo>() {

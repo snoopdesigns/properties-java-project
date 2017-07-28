@@ -1,24 +1,60 @@
-package org.snoopdesigns.props.parser;
+package org.snoopdesigns.props.persistence.entities;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "APARTMENTS")
 public class Apartment {
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    @Column(name = "ID")
+    private Long id;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name="floorNumber", column=@Column(name="FLOOR_NUMBER")),
+            @AttributeOverride(name="floorTotal", column=@Column(name="FLOOR_TOTAL"))
+    })
     private FloorInfo floorInfo;
+
+    @Column(name = "HOUSE_TYPE")
     private String houseType;
+
+    @Column(name = "SELL_TYPE")
     private String sellType;
+
+    @Column(name = "TOTAL_AREA")
     private Float totalArea;
+
+    @Column(name = "ROOMS_AREA")
     private Float roomsArea;
+
+    @Column(name = "LIVING_AREA")
     private Float livingArea;
-    private boolean balkony;
-    private boolean elevator;
+
+    @Column(name = "WINDOW")
     private String window;
+
+    @Column(name = "PRICE")
     private Integer price;
+
+    @Column(name = "ADDRESS")
     private String address;
 
     public Apartment() {
     }
 
     public Apartment(FloorInfo floorInfo, String houseType, String sellType, Float totalArea,
-                     Float roomsArea, Float livingArea, boolean balkony, boolean elevator, String window, Integer price,
+                     Float roomsArea, Float livingArea, String window, Integer price,
                      String address) {
         this.floorInfo = floorInfo;
         this.houseType = houseType;
@@ -26,8 +62,6 @@ public class Apartment {
         this.totalArea = totalArea;
         this.roomsArea = roomsArea;
         this.livingArea = livingArea;
-        this.balkony = balkony;
-        this.elevator = elevator;
         this.window = window;
         this.price = price;
         this.address = address;
@@ -81,22 +115,6 @@ public class Apartment {
         this.livingArea = livingArea;
     }
 
-    public boolean isBalkony() {
-        return balkony;
-    }
-
-    public void setBalkony(boolean balkony) {
-        this.balkony = balkony;
-    }
-
-    public boolean isElevator() {
-        return elevator;
-    }
-
-    public void setElevator(boolean elevator) {
-        this.elevator = elevator;
-    }
-
     public String getWindow() {
         return window;
     }
@@ -130,11 +148,9 @@ public class Apartment {
                 ", totalArea=" + totalArea +
                 ", roomsArea=" + roomsArea +
                 ", livingArea=" + livingArea +
-                ", balkony=" + balkony +
-                ", elevator=" + elevator +
-                ", window='" + window + '\'' +
+                ", window='" + window +
                 ", price=" + price +
-                ", address='" + address + '\'' +
+                ", address='" + address +
                 '}';
     }
 }

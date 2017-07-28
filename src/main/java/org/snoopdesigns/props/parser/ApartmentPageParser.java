@@ -3,6 +3,8 @@ package org.snoopdesigns.props.parser;
 import com.google.code.geocoder.Geocoder;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.snoopdesigns.props.persistence.entities.Apartment;
+import org.snoopdesigns.props.persistence.entities.FloorInfo;
 
 public class ApartmentPageParser extends AbstractParser<Apartment> {
 
@@ -40,14 +42,12 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
         Integer price = elementDataExtractor.extractValue(bodyDocument, PRICE);
         String address = elementDataExtractor.extractValue(bodyDocument, ADDRESS);
 
-        System.out.println("");
-
         /*try {
             GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(addrElement.text(), "RU"));
             System.out.println(resp.getResults().get(0).getGeometry().getLocation());
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        return new Apartment(floor, ht, st, ta, ra, la, true, true, cr, price, address);
+        return new Apartment(floor, ht, st, ta, ra, la, cr, price, address);
     }
 }

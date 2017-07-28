@@ -1,4 +1,4 @@
-package org.snoopdesigns.props.parser;
+package org.snoopdesigns.props.persistence.entities;
 
 /**
  * Created by dmmorozo on 28.07.2017.
@@ -7,6 +7,9 @@ public class FloorInfo {
 
     private Integer floorNumber;
     private Integer floorTotal;
+
+    public FloorInfo() {
+    }
 
     public FloorInfo(Integer floorNumber, Integer floorTotal) {
         this.floorNumber = floorNumber;

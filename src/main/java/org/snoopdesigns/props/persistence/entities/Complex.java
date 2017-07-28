@@ -1,17 +1,22 @@
 package org.snoopdesigns.props.persistence.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "COMPLEXES")
 public class Complex {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id;
 
+    @Column(name = "CIAN_ID")
     private String cianId;
 
     protected Complex() {}
