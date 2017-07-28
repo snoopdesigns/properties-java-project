@@ -1,5 +1,12 @@
 package org.snoopdesigns.props.controllers;
 
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import org.snoopdesigns.props.persistence.entities.Apartment;
 import org.snoopdesigns.props.persistence.repository.ApartmentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,9 +20,8 @@ public class ApartmentsController {
     private ApartmentsRepository apartmentsRepository;
 
     @RequestMapping(value = "/load")
-    public String load() throws Exception {
-        StringBuilder sb = new StringBuilder();
-        apartmentsRepository.findAll().forEach(e -> sb.append(e.toString() + "<br>"));
-        return sb.toString();
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Apartment> load() throws Exception {
+        return StreamSupport.stream(apartmentsRepository.findAll().spliterator(), false).collect(Collectors.toList());
     }
 }

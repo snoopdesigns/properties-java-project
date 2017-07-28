@@ -16,9 +16,21 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         ApartmentPageParser parser = new ApartmentPageParser();
-        String contents = readContents("https://spb.cian.ru/sale/flat/150295433/");
-        Apartment ap = parser.parse(contents);
+        String url = "https://spb.cian.ru/sale/flat/150295433/";
+        String contents = readContentsTest(url);
+        Apartment ap = parser.parse(url, contents);
         System.out.println(ap);
+    }
+
+    public static String readContentsTest(String url) throws Exception {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        try {
+            HttpGet request = new HttpGet(url);
+            CloseableHttpResponse response = httpclient.execute(request);
+            return new BufferedReader(new InputStreamReader(response.getEntity().getContent())).lines().collect(Collectors.joining("\n"));
+        } finally {
+            httpclient.close();
+        }
     }
 
     public static String readContents(String url) throws Exception {

@@ -3,14 +3,24 @@ package org.snoopdesigns.props.parser;
 import com.google.code.geocoder.Geocoder;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.snoopdesigns.props.parser.extractor.ElementDataExtractor;
+import org.snoopdesigns.props.parser.extractor.ExtractKey;
+import org.snoopdesigns.props.parser.extractor.HrefDataExtractor;
+import org.snoopdesigns.props.parser.extractor.TableDataExtractor;
+import org.snoopdesigns.props.parser.extractor.ValueParsers;
 import org.snoopdesigns.props.persistence.entities.Apartment;
 import org.snoopdesigns.props.persistence.entities.FloorInfo;
 
 public class ApartmentPageParser extends AbstractParser<Apartment> {
 
+    private final static Logger logger = LoggerFactory.getLogger(ApartmentPageParser.class);
+
     private Geocoder geocoder = new Geocoder();
     private TableDataExtractor tableDataExtractor = new TableDataExtractor();
     private ElementDataExtractor elementDataExtractor = new ElementDataExtractor();
+    private HrefDataExtractor hrefDataExtractor = new HrefDataExtractor();
     private ExtractKey<FloorInfo> FLOOR_KEY = new ExtractKey<>(ValueParsers.FLOOR_PARSER, "этаж");
     private ExtractKey<String> HOUSE_TYPE = new ExtractKey<>(ValueParsers.STRING_PARSER, "тип дома");
     private ExtractKey<String> SELL_TYPE = new ExtractKey<>(ValueParsers.STRING_PARSER, "тип продажи");
@@ -21,11 +31,15 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
     private ExtractKey<String> ELEVATOR = new ExtractKey<>(ValueParsers.STRING_PARSER, "лифт");
     private ExtractKey<String> WINDOW = new ExtractKey<>(ValueParsers.STRING_PARSER, "вид из окна");
     private ExtractKey<String> COMPLEX_READY = new ExtractKey<>(ValueParsers.STRING_PARSER, "сдача гк");
+    private ExtractKey<String> PHONE = new ExtractKey<>(ValueParsers.STRING_PARSER, "телефон");
+    private ExtractKey<String> REPAIRS = new ExtractKey<>(ValueParsers.STRING_PARSER, "ремонт");
     private ExtractKey<Integer> PRICE = new ExtractKey<>(ValueParsers.PRICE_PARSER, "object_descr_price");
     private ExtractKey<String> ADDRESS = new ExtractKey<>(ValueParsers.STRING_PARSER, "object_descr_addr");
 
+    private ExtractKey<Integer> COMPLEX = new ExtractKey<>(ValueParsers.COMPLEX_ID_PARSER, "object_descr_title");
+
     @Override
-    public Apartment processContents(Element bodyDocument) {
+    public Apartment processContents(String url, Element bodyDocument) {
         Elements infoElements = bodyDocument.getElementsByAttributeValue("class", "object_descr_props flat sale");
         Element infoElement = infoElements.first();
 
@@ -39,8 +53,18 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
         String elev = tableDataExtractor.extractValue(infoElement.child(0), ELEVATOR);
         String wins = tableDataExtractor.extractValue(infoElement.child(0), WINDOW);
         String cr = tableDataExtractor.extractValue(infoElement.child(0), COMPLEX_READY);
+        String tel = tableDataExtractor.extractValue(infoElement.child(0), PHONE);
+        String rep = tableDataExtractor.extractValue(infoElement.child(0), REPAIRS);
         Integer price = elementDataExtractor.extractValue(bodyDocument, PRICE);
         String address = elementDataExtractor.extractValue(bodyDocument, ADDRESS);
+
+        Integer complexId = hrefDataExtractor.extractValue(bodyDocument, COMPLEX);
+        if (complexId != null && String.valueOf(complexId).length() != 4) {
+            logger.warn("CianId should be 4 length");
+        }
+
+        logger.info("Complex id: " + complexId);
+        String cianId = url.substring(url.indexOf("flat/") + 5, url.length()-1);
 
         /*try {
             GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(addrElement.text(), "RU"));
@@ -48,6 +72,6 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        return new Apartment(floor, ht, st, ta, ra, la, cr, price, address);
+        return new Apartment(cianId, complexId, url, floor, ht, st, ta, ra, la, wins, tel, rep, price, address);
     }
 }

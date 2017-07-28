@@ -35,7 +35,7 @@ public class Crawler extends WebCrawler {
         String url = page.getWebURL().getURL();
         logger.info("URL: " + url);
         if (url.contains("spb.cian.ru/sale/flat/")) {
-            Apartment ap = parser.parse(new String(page.getContentData()));
+            Apartment ap = parser.parse(url, new String(page.getContentData()));
             apartmentsRepository.save(ap);
         }
     }

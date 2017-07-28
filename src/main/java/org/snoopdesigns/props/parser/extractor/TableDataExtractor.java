@@ -1,4 +1,4 @@
-package org.snoopdesigns.props.parser;
+package org.snoopdesigns.props.parser.extractor;
 
 import org.jsoup.nodes.Element;
 
@@ -11,6 +11,6 @@ public class TableDataExtractor extends DataExtractor {
                 return elem.child(1).text();
             }
         }
-        throw new RuntimeException(String.format("Unable to parse table: %s", element));
+        return null;
     }
 }

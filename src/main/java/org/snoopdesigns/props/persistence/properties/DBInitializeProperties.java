@@ -26,6 +26,9 @@ public class DBInitializeProperties {
             statement.executeUpdate(
                     "CREATE TABLE APARTMENTS(" +
                             "ID INTEGER Primary key, " +
+                            "CIAN_ID varchar(30), " +
+                            "COMPLEX_ID INTEGER, " +
+                            "URL varchar(64), " +
                             "FLOOR_NUMBER INTEGER, " +
                             "FLOOR_TOTAL INTEGER, " +
                             "HOUSE_TYPE varchar(30), " +
@@ -35,6 +38,8 @@ public class DBInitializeProperties {
                             "LIVING_AREA REAL, " +
                             "WINDOW varchar(30), " +
                             "PRICE INTEGER, " +
+                            "PHONE varchar(30), " +
+                            "REPAIRS varchar(30), " +
                             "ADDRESS varchar(30))");
             statement.executeUpdate(
                     "CREATE TABLE COMPLEXES(" +

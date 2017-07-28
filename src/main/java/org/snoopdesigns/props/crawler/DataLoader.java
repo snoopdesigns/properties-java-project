@@ -29,7 +29,7 @@ public class DataLoader {
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(crawlStorageFolder);
         config.setMaxDepthOfCrawling(3);
-        config.setMaxPagesToFetch(50);
+        config.setMaxPagesToFetch(150);
 
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();

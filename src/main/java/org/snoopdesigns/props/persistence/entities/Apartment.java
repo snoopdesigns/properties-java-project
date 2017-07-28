@@ -19,6 +19,15 @@ public class Apartment {
     @Column(name = "ID")
     private Long id;
 
+    @Column(name = "CIAN_ID")
+    private String cianId;
+
+    @Column(name = "COMPLEX_ID")
+    private Integer complexId;
+
+    @Column(name = "URL")
+    private String url;
+
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name="floorNumber", column=@Column(name="FLOOR_NUMBER")),
@@ -44,6 +53,12 @@ public class Apartment {
     @Column(name = "WINDOW")
     private String window;
 
+    @Column(name = "PHONE")
+    private String phone;
+
+    @Column(name = "REPAIRS")
+    private String repairs;
+
     @Column(name = "PRICE")
     private Integer price;
 
@@ -53,9 +68,12 @@ public class Apartment {
     public Apartment() {
     }
 
-    public Apartment(FloorInfo floorInfo, String houseType, String sellType, Float totalArea,
-                     Float roomsArea, Float livingArea, String window, Integer price,
-                     String address) {
+    public Apartment(String cianId, Integer complexId, String url, FloorInfo floorInfo, String houseType,
+                     String sellType, Float totalArea, Float roomsArea, Float livingArea, String window, String
+                             phone, String repairs, Integer price, String address) {
+        this.cianId = cianId;
+        this.complexId = complexId;
+        this.url = url;
         this.floorInfo = floorInfo;
         this.houseType = houseType;
         this.sellType = sellType;
@@ -63,8 +81,42 @@ public class Apartment {
         this.roomsArea = roomsArea;
         this.livingArea = livingArea;
         this.window = window;
+        this.phone = phone;
+        this.repairs = repairs;
         this.price = price;
         this.address = address;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCianId() {
+        return cianId;
+    }
+
+    public void setCianId(String cianId) {
+        this.cianId = cianId;
+    }
+
+    public Integer getComplexId() {
+        return complexId;
+    }
+
+    public void setComplexId(Integer complexId) {
+        this.complexId = complexId;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public FloorInfo getFloorInfo() {
@@ -123,6 +175,22 @@ public class Apartment {
         this.window = window;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getRepairs() {
+        return repairs;
+    }
+
+    public void setRepairs(String repairs) {
+        this.repairs = repairs;
+    }
+
     public Integer getPrice() {
         return price;
     }
@@ -137,20 +205,5 @@ public class Apartment {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    @Override
-    public String toString() {
-        return "Apartment{" +
-                "floorInfo=" + floorInfo +
-                ", houseType='" + houseType + '\'' +
-                ", sellType='" + sellType + '\'' +
-                ", totalArea=" + totalArea +
-                ", roomsArea=" + roomsArea +
-                ", livingArea=" + livingArea +
-                ", window='" + window +
-                ", price=" + price +
-                ", address='" + address +
-                '}';
     }
 }

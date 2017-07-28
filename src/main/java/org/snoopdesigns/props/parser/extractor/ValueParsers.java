@@ -1,4 +1,4 @@
-package org.snoopdesigns.props.parser;
+package org.snoopdesigns.props.parser.extractor;
 
 import org.snoopdesigns.props.persistence.entities.FloorInfo;
 
@@ -15,7 +15,15 @@ public class ValueParsers {
     public static final ValueParser<Float> AREA_PARSER = new ValueParser<Float>() {
         @Override
         public Float parse(String value) {
-            return Float.valueOf(value.replace("\u00A0"," ").replaceAll(",",".").split(" ")[0]);
+            String replaced = value.replace("\u00A0"," ");
+            if (replaced.matches(".*\\d+.*")) {
+                if (replaced.contains("-")) {
+                    replaced = replaced.substring(0, replaced.indexOf("-"));
+                }
+                return Float.valueOf(replaced.replaceAll(",", ".").split(" ")[0]);
+            } else {
+                return null;
+            }
         }
     };
 
@@ -30,6 +38,15 @@ public class ValueParsers {
         @Override
         public String parse(String value) {
             return value;
+        }
+    };
+
+    public static final ValueParser<Integer> COMPLEX_ID_PARSER = new ValueParser<Integer>() {
+        @Override
+        public Integer parse(String value) {
+            value = value.substring(value.lastIndexOf("-"), value.length()-1);
+            value = value.replaceAll("[^\\d.]", "");
+            return Integer.valueOf(value);
         }
     };
 }

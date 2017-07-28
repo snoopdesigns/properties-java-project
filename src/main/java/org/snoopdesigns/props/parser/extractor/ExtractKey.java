@@ -1,4 +1,4 @@
-package org.snoopdesigns.props.parser;
+package org.snoopdesigns.props.parser.extractor;
 
 public class ExtractKey<T> {
 
@@ -6,7 +6,11 @@ public class ExtractKey<T> {
     private String value;
 
     public T parse(String value) {
-        return parser.parse(value.trim());
+        if (value != null) {
+            return parser.parse(value.trim());
+        } else {
+            return null;
+        }
     }
 
     public ExtractKey(ValueParser<T> parser, String value) {
