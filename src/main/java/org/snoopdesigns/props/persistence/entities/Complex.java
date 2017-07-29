@@ -1,11 +1,7 @@
 package org.snoopdesigns.props.persistence.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "COMPLEXES")
@@ -17,11 +13,14 @@ public class Complex {
     private Long id;
 
     @Column(name = "CIAN_ID")
-    private String cianId;
+    private Integer cianId;
 
-    protected Complex() {}
+    @OneToMany(mappedBy="complex")
+    private List<Apartment> apartments;
 
-    public Complex(String cianId) {
+    public Complex() {}
+
+    public Complex(Integer cianId) {
         this.cianId = cianId;
     }
 
@@ -29,23 +28,19 @@ public class Complex {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCianId() {
+    public Integer getCianId() {
         return cianId;
     }
 
-    public void setCianId(String cianId) {
+    public void setCianId(Integer cianId) {
         this.cianId = cianId;
     }
 
-    @Override
-    public String toString() {
-        return "Complex{" +
-                "id=" + id +
-                ", cianId='" + cianId + '\'' +
-                '}';
+    public List<Apartment> getApartments() {
+        return apartments;
+    }
+
+    public void setApartments(List<Apartment> apartments) {
+        this.apartments = apartments;
     }
 }

@@ -15,6 +15,7 @@ import org.snoopdesigns.props.parser.extractor.HrefDataExtractor;
 import org.snoopdesigns.props.parser.extractor.TableDataExtractor;
 import org.snoopdesigns.props.parser.extractor.ValueParsers;
 import org.snoopdesigns.props.persistence.entities.Apartment;
+import org.snoopdesigns.props.persistence.entities.Complex;
 import org.snoopdesigns.props.persistence.entities.FloorInfo;
 
 public class ApartmentPageParser extends AbstractParser<Apartment> {
@@ -47,39 +48,35 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
         Elements infoElements = bodyDocument.getElementsByAttributeValue("class", "object_descr_props flat sale");
         Element infoElement = infoElements.first();
 
-        FloorInfo floor = tableDataExtractor.extractValue(infoElement.child(0), FLOOR_KEY);
-        String ht = tableDataExtractor.extractValue(infoElement.child(0), HOUSE_TYPE);
-        String st = tableDataExtractor.extractValue(infoElement.child(0), SELL_TYPE);
-        Float ta = tableDataExtractor.extractValue(infoElement.child(0), TOTAL_AREA);
-        Float ra = tableDataExtractor.extractValue(infoElement.child(0), ROOMS_AREA);
-        Float la = tableDataExtractor.extractValue(infoElement.child(0), LIVING_AREA);
+        Apartment apartment = new Apartment();
+
+        apartment.setFloorInfo(tableDataExtractor.extractValue(infoElement.child(0), FLOOR_KEY));
+        apartment.setHouseType(tableDataExtractor.extractValue(infoElement.child(0), HOUSE_TYPE));
+        apartment.setSellType(tableDataExtractor.extractValue(infoElement.child(0), SELL_TYPE));
+        apartment.setTotalArea(tableDataExtractor.extractValue(infoElement.child(0), TOTAL_AREA));
+        apartment.setRoomsArea(tableDataExtractor.extractValue(infoElement.child(0), ROOMS_AREA));
+        apartment.setLivingArea(tableDataExtractor.extractValue(infoElement.child(0), LIVING_AREA));
         String b = tableDataExtractor.extractValue(infoElement.child(0), BALKONY);
         String elev = tableDataExtractor.extractValue(infoElement.child(0), ELEVATOR);
-        String wins = tableDataExtractor.extractValue(infoElement.child(0), WINDOW);
+        apartment.setWindow(tableDataExtractor.extractValue(infoElement.child(0), WINDOW));
         String cr = tableDataExtractor.extractValue(infoElement.child(0), COMPLEX_READY);
-        String tel = tableDataExtractor.extractValue(infoElement.child(0), PHONE);
-        String rep = tableDataExtractor.extractValue(infoElement.child(0), REPAIRS);
-        Integer price = elementDataExtractor.extractValue(bodyDocument, PRICE);
-        String address = elementDataExtractor.extractValue(bodyDocument, ADDRESS);
+        apartment.setPhone(tableDataExtractor.extractValue(infoElement.child(0), PHONE));
+        apartment.setRepairs(tableDataExtractor.extractValue(infoElement.child(0), REPAIRS));
+        apartment.setPrice(elementDataExtractor.extractValue(bodyDocument, PRICE));
+        apartment.setAddress(elementDataExtractor.extractValue(bodyDocument, ADDRESS));
 
         Integer complexId = hrefDataExtractor.extractValue(bodyDocument, COMPLEX);
-        if (complexId != null && String.valueOf(complexId).length() != 4) {
-            logger.warn("CianId should be 4 length");
-        }
+        apartment.setComplex(new Complex(complexId));
+        apartment.setCianId(url.substring(url.indexOf("flat/") + 5, url.length() - 1));
 
-        logger.info("Complex id: " + complexId);
-        String cianId = url.substring(url.indexOf("flat/") + 5, url.length()-1);
-
-        Float lat = null;
-        Float lng = null;
         try {
-            GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(address, "RU"));
+            GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(apartment.getAddress(), "RU"));
             System.out.println(resp.getResults().get(0).getGeometry().getLocation());
-            lat = resp.getResults().get(0).getGeometry().getLocation().getLat().floatValue();
-            lng = resp.getResults().get(0).getGeometry().getLocation().getLng().floatValue();
+            apartment.setLat(resp.getResults().get(0).getGeometry().getLocation().getLat().floatValue());
+            apartment.setLng(resp.getResults().get(0).getGeometry().getLocation().getLng().floatValue());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new Apartment(cianId, complexId, url, floor, ht, st, ta, ra, la, wins, tel, rep, price, address, lat, lng);
+        return apartment;
     }
 }

@@ -1,5 +1,6 @@
 package org.snoopdesigns.props.crawler;
 
+import java.io.File;
 import java.util.stream.IntStream;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
@@ -23,11 +24,13 @@ public class DataLoader {
 
     public void loadData(Integer maxPages) throws Exception {
 
-        String crawlStorageFolder = "/data/crawl/root";
+        String crawlStorageFolder = "/home/dimka/crawler";
+        this.deleteCrawlDirectory(new File(crawlStorageFolder));
         int numberOfCrawlers = 1;
 
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(crawlStorageFolder);
+        config.setResumableCrawling(true);
         config.setMaxDepthOfCrawling(3);
         config.setMaxPagesToFetch(150);
 
@@ -41,5 +44,21 @@ public class DataLoader {
             controller.addSeed(String.format("https://www.cian.ru/newobjects/list/?deal_type=sale&engine_version=2&offer_type=newobject&p=%d&region=-2&room1=1", page));
         }
         controller.start(new CrawlerFactory(complexRepository, apartmentsRepository), numberOfCrawlers);
+    }
+
+    private boolean deleteCrawlDirectory(File directory) {
+        if(directory.exists()) {
+            File[] files = directory.listFiles();
+            if(null!=files){
+                for(int i=0; i<files.length; i++) {
+                    if(files[i].isDirectory()) {
+                        deleteCrawlDirectory(files[i]);
+                    } else {
+                        files[i].delete();
+                    }
+                }
+            }
+        }
+        return(directory.delete());
     }
 }

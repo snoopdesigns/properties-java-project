@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snoopdesigns.props.parser.ApartmentPageParser;
 import org.snoopdesigns.props.persistence.entities.Apartment;
+import org.snoopdesigns.props.persistence.entities.Complex;
 import org.snoopdesigns.props.persistence.repository.ApartmentsRepository;
 import org.snoopdesigns.props.persistence.repository.ComplexRepository;
 
@@ -36,6 +37,11 @@ public class Crawler extends WebCrawler {
         logger.info("URL: " + url);
         if (url.contains("spb.cian.ru/sale/flat/")) {
             Apartment ap = parser.parse(url, new String(page.getContentData()));
+            Complex complex = complexRepository.findByCiannId(ap.getComplex().getCianId());
+            if (complex == null) {
+                complex = complexRepository.save(ap.getComplex());
+            }
+            ap.setComplex(complex);
             apartmentsRepository.save(ap);
         }
     }

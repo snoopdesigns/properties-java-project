@@ -1,14 +1,6 @@
 package org.snoopdesigns.props.persistence.entities;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "APARTMENTS")
@@ -22,8 +14,9 @@ public class Apartment {
     @Column(name = "CIAN_ID")
     private String cianId;
 
-    @Column(name = "COMPLEX_ID")
-    private Integer complexId;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="COMPLEX_ID")
+    private Complex complex;
 
     @Column(name = "URL")
     private String url;
@@ -71,36 +64,10 @@ public class Apartment {
     @Column(name = "LNG")
     private Float lng;
 
-    public Apartment() {
-    }
-
-    public Apartment(String cianId, Integer complexId, String url, FloorInfo floorInfo, String houseType,
-                     String sellType, Float totalArea, Float roomsArea, Float livingArea, String window, String phone,
-                     String repairs, Integer price, String address, Float lat, Float lng) {
-        this.cianId = cianId;
-        this.complexId = complexId;
-        this.url = url;
-        this.floorInfo = floorInfo;
-        this.houseType = houseType;
-        this.sellType = sellType;
-        this.totalArea = totalArea;
-        this.roomsArea = roomsArea;
-        this.livingArea = livingArea;
-        this.window = window;
-        this.phone = phone;
-        this.repairs = repairs;
-        this.price = price;
-        this.address = address;
-        this.lat = lat;
-        this.lng = lng;
-    }
+    public Apartment() {}
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getCianId() {
@@ -111,12 +78,12 @@ public class Apartment {
         this.cianId = cianId;
     }
 
-    public Integer getComplexId() {
-        return complexId;
+    public Complex getComplex() {
+        return complex;
     }
 
-    public void setComplexId(Integer complexId) {
-        this.complexId = complexId;
+    public void setComplex(Complex complex) {
+        this.complex = complex;
     }
 
     public String getUrl() {

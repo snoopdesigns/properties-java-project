@@ -46,7 +46,7 @@ public class DBInitializeProperties {
             statement.executeUpdate(
                     "CREATE TABLE COMPLEXES(" +
                             "ID INTEGER Primary key, " +
-                            "CIAN_ID varchar(30) not null)");
+                            "CIAN_ID INTEGER)");
             statement.close();
             connection.close();
         }
