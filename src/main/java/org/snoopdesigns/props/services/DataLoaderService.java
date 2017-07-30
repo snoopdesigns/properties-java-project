@@ -1,20 +1,21 @@
-package org.snoopdesigns.props.crawler;
+package org.snoopdesigns.props.services;
 
 import java.io.File;
-import java.util.stream.IntStream;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import org.snoopdesigns.props.crawler.CrawlParameters;
+import org.snoopdesigns.props.crawler.CrawlerFactory;
 import org.snoopdesigns.props.persistence.repository.ApartmentsRepository;
 import org.snoopdesigns.props.persistence.repository.ComplexRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataLoader {
+public class DataLoaderService {
 
     @Autowired
     private ComplexRepository complexRepository;
@@ -22,7 +23,7 @@ public class DataLoader {
     @Autowired
     private ApartmentsRepository apartmentsRepository;
 
-    public void loadData(Integer maxPages) throws Exception {
+    public void loadData() throws Exception {
 
         String crawlStorageFolder = "/home/dimka/crawler";
         this.deleteCrawlDirectory(new File(crawlStorageFolder));
@@ -31,7 +32,6 @@ public class DataLoader {
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(crawlStorageFolder);
         config.setResumableCrawling(true);
-        config.setMaxDepthOfCrawling(3);
         config.setMaxPagesToFetch(150);
 
         PageFetcher pageFetcher = new PageFetcher(config);
@@ -40,10 +40,9 @@ public class DataLoader {
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
-        for (Integer page : IntStream.range(1, maxPages+1).toArray()) {
-            controller.addSeed(String.format("https://www.cian.ru/newobjects/list/?deal_type=sale&engine_version=2&offer_type=newobject&p=%d&region=-2&room1=1", page));
-        }
-        controller.start(new CrawlerFactory(complexRepository, apartmentsRepository), numberOfCrawlers);
+        controller.addSeed("https://www.cian.ru/newobjects/list/?deal_type=sale&engine_version=2&offer_type=newobject&p=1&region=-2&room1=1");
+        CrawlParameters crawlParameters = new CrawlParameters(true, false);
+        controller.start(new CrawlerFactory(crawlParameters, complexRepository, apartmentsRepository), numberOfCrawlers);
     }
 
     private boolean deleteCrawlDirectory(File directory) {

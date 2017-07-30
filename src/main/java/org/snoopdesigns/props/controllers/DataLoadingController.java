@@ -1,6 +1,6 @@
 package org.snoopdesigns.props.controllers;
 
-import org.snoopdesigns.props.crawler.DataLoader;
+import org.snoopdesigns.props.services.DataLoaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class DataLoadingController {
 
     @Autowired
-    private DataLoader dataLoader;
+    private DataLoaderService dataLoader;
 
     @RequestMapping(value = "/load")
     public String loadData() throws Exception {
-        dataLoader.loadData(2);
+        dataLoader.loadData();
         return "OK";
     }
 }
