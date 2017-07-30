@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.model.GeocodeResponse;
 import com.google.code.geocoder.model.GeocoderRequest;
+import com.google.code.geocoder.model.GeocoderStatus;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
@@ -66,14 +67,22 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
         apartment.setAddress(elementDataExtractor.extractValue(bodyDocument, ADDRESS));
 
         Integer complexId = hrefDataExtractor.extractValue(bodyDocument, COMPLEX);
-        apartment.setComplex(new Complex(complexId));
+        if (complexId == null) {
+            logger.warn("Unable to extract complexId from page: " + url);
+        } else {
+            apartment.setComplex(new Complex(complexId));
+        }
         apartment.setCianId(url.substring(url.indexOf("flat/") + 5, url.length() - 1));
 
         try {
             GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(apartment.getAddress(), "RU"));
-            System.out.println(resp.getResults().get(0).getGeometry().getLocation());
-            apartment.setLat(resp.getResults().get(0).getGeometry().getLocation().getLat().floatValue());
-            apartment.setLng(resp.getResults().get(0).getGeometry().getLocation().getLng().floatValue());
+            if (resp.getStatus().equals(GeocoderStatus.OK)) {
+                logger.info("Location: " + resp.getResults().get(0).getGeometry().getLocation());
+                apartment.setLat(resp.getResults().get(0).getGeometry().getLocation().getLat().floatValue());
+                apartment.setLng(resp.getResults().get(0).getGeometry().getLocation().getLng().floatValue());
+            } else {
+                logger.warn("Unable to geocode location: " + apartment.getAddress());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

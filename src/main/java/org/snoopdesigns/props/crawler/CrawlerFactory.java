@@ -7,16 +7,19 @@ import org.snoopdesigns.props.persistence.repository.ComplexRepository;
 
 public class CrawlerFactory implements CrawlController.WebCrawlerFactory{
 
-    ComplexRepository complexRepository;
-    ApartmentsRepository apartmentsRepository;
+    private ComplexRepository complexRepository;
+    private ApartmentsRepository apartmentsRepository;
+    private CrawlParameters crawlParameters;
 
-    public CrawlerFactory(ComplexRepository complexRepository, ApartmentsRepository apartmentsRepository) {
+    public CrawlerFactory(CrawlParameters crawlParameters, ComplexRepository complexRepository,
+                          ApartmentsRepository apartmentsRepository) {
+        this.crawlParameters = crawlParameters;
         this.complexRepository = complexRepository;
         this.apartmentsRepository = apartmentsRepository;
     }
 
     @Override
     public WebCrawler newInstance() throws Exception {
-        return new Crawler(this.complexRepository, this.apartmentsRepository);
+        return new Crawler(this.crawlParameters, this.complexRepository, this.apartmentsRepository);
     }
 }

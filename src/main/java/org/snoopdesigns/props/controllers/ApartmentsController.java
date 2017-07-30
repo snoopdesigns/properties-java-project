@@ -2,9 +2,8 @@ package org.snoopdesigns.props.controllers;
 
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.snoopdesigns.props.persistence.entities.Apartment;
 import org.snoopdesigns.props.persistence.repository.ApartmentsRepository;
@@ -22,6 +21,8 @@ public class ApartmentsController {
     @RequestMapping(value = "/load")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Apartment> load() throws Exception {
-        return StreamSupport.stream(apartmentsRepository.findAll().spliterator(), false).collect(Collectors.toList());
+        List<Apartment> apartments = new ArrayList<>();
+        apartments.addAll(apartmentsRepository.findAll());
+        return apartments;
     }
 }

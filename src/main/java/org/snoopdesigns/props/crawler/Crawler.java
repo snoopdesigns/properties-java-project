@@ -15,12 +15,15 @@ public class Crawler extends WebCrawler {
 
     private final static Logger logger = LoggerFactory.getLogger(Crawler.class);
 
+    private CrawlParameters crawlParameters;
     private ComplexRepository complexRepository;
     private ApartmentsRepository apartmentsRepository;
 
     ApartmentPageParser parser = new ApartmentPageParser();
 
-    public Crawler(ComplexRepository complexRepository, ApartmentsRepository apartmentsRepository) {
+    public Crawler(CrawlParameters crawlParameters, ComplexRepository complexRepository,
+                   ApartmentsRepository apartmentsRepository) {
+        this.crawlParameters = crawlParameters;
         this.complexRepository = complexRepository;
         this.apartmentsRepository = apartmentsRepository;
     }
@@ -28,7 +31,10 @@ public class Crawler extends WebCrawler {
     @Override
     public boolean shouldVisit(Page referringPage, WebURL url) {
         String href = url.getURL().toLowerCase();
-        return href.contains("cian.ru") && ((href.contains("newobject%5b0%5d=") && href.contains("offer_type=flat")) || href.contains("spb.cian.ru/sale/flat/"));
+        boolean isComplexPageCrawl = href.contains("offer_type=newobject") && href.contains("&p=");
+        boolean isApartmentInfoPageCrawl = href.contains("spb.cian.ru/sale/flat/");
+        boolean isApartmentsListPageCrawl = href.contains("newobject%5b0%5d=") && href.contains("offer_type=flat");
+        return isComplexPageCrawl || isApartmentsListPageCrawl || isApartmentInfoPageCrawl;
     }
 
     @Override
@@ -37,11 +43,14 @@ public class Crawler extends WebCrawler {
         logger.info("URL: " + url);
         if (url.contains("spb.cian.ru/sale/flat/")) {
             Apartment ap = parser.parse(url, new String(page.getContentData()));
-            Complex complex = complexRepository.findByCiannId(ap.getComplex().getCianId());
-            if (complex == null) {
-                complex = complexRepository.save(ap.getComplex());
+            if (ap.getComplex() != null) {
+                Complex complex = complexRepository.findByCianId(ap.getComplex().getCianId());
+                if (complex == null) {
+                    complex = complexRepository.save(ap.getComplex());
+                    logger.info("Saved new complex: id = " + complex.getId() + ", cianId = " + complex.getCianId());
+                }
+                ap.setComplex(complex);
             }
-            ap.setComplex(complex);
             apartmentsRepository.save(ap);
         }
     }

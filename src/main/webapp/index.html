@@ -7,30 +7,27 @@
         <script src="https://unpkg.com/leaflet@1.1.0/dist/leaflet.js"
                 integrity="sha512-mNqn2Wg7tSToJhvHcqfzLMU6J4mkOImSPTxVZAdo+lcPlk+GhZmYgACEe0x35K7YzW1zJ7XyJV/TT1MrdXvMcA=="
                 crossorigin=""></script>
+      <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+      <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css" />
+      <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+      <link rel="stylesheet" href="css/style.css"/>
+      <script src="js/main.js"></script>
     </head>
     <body>
 
-    <h1>My First Heading</h1>
+        <h1>My First Heading</h1>
 
-    <div id="mapid" style="height:600px"></div>
+        <!--<div id="mapid" style="height:600px"></div>-->
 
-    <script>
-        var mymap = L.map('mapid').setView([59.9, 30.505], 13);
+        <script>
+            var mymap = L.map('mapid').setView([59.9, 30.505], 13);
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+                maxZoom: 18,
+                id: 'mapbox.streets'
+            }).addTo(mymap);
+        </script>
 
-        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-            maxZoom: 18,
-            id: 'mapbox.streets'
-        }).addTo(mymap);
-
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", "/apartments/load", false);
-        xmlHttp.send(null);
-        var data = JSON.parse(xmlHttp.responseText);
-
-        for (var i=0; i < data.length; i++) {
-            var marker = L.marker([data[i].lat, data[i].lng]).addTo(mymap);
-        }
-    </script>
-
+        <div id="jsGrid"></div>
     </body>
 </html>
