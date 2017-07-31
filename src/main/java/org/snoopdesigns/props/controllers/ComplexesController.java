@@ -1,5 +1,6 @@
 package org.snoopdesigns.props.controllers;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ComplexesController {
 
     @RequestMapping(value = "/load")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Complex> load(String request) throws Exception {
+    public List<Complex> load(String req, HttpServletRequest request) throws Exception {
         List<Complex> complexes = new ArrayList<>();
         complexes.addAll(complexRepository.findAll());
         return complexes;

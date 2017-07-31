@@ -73,6 +73,7 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
             apartment.setComplex(new Complex(complexId));
         }
         apartment.setCianId(url.substring(url.indexOf("flat/") + 5, url.length() - 1));
+        apartment.setUrl(url);
 
         try {
             GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(apartment.getAddress(), "RU"));

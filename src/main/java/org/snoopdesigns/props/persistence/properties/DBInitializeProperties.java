@@ -17,7 +17,7 @@ public class DBInitializeProperties {
     @Autowired
     private DataSource dataSource;
 
-    @Value("${clearDb}")
+    @Value("${clearDb:#{false}}")
     private String clearDb;
 
     @PostConstruct

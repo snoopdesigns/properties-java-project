@@ -24,10 +24,10 @@ public class DataLoaderService {
     @Autowired
     private ApartmentsRepository apartmentsRepository;
 
-    @Value("${proxyHost}")
+    @Value("${proxyHost:#{null}}")
     private String proxyHost;
 
-    @Value("${proxyPort}")
+    @Value("${proxyPort:#{null}}")
     private Integer proxyPort;
 
     public void loadData() throws Exception {
@@ -40,8 +40,10 @@ public class DataLoaderService {
         config.setCrawlStorageFolder(crawlStorageFolder);
         config.setResumableCrawling(true);
         config.setMaxPagesToFetch(150);
-        config.setProxyHost(proxyHost);
-        config.setProxyPort(proxyPort);
+        if (proxyHost != null && proxyPort != null) {
+            config.setProxyHost(proxyHost);
+            config.setProxyPort(proxyPort);
+        }
         config.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36");
 
         PageFetcher pageFetcher = new PageFetcher(config);

@@ -7,7 +7,10 @@ $(document).ready(function() {
     $(document).ready(function () {
         $.getJSON("http://localhost:8080/apartments/load", function (json) {
             for (var i = 0; i < json.length; i++) {
-                //L.marker([json[i].lat, json[i].lng]).addTo(mymap);
+                if (json[i].lat != null && json[i].lng != null) {
+                    var marker = L.marker([json[i].lat, json[i].lng]).addTo(mymap);
+                    marker.bindPopup("<b>Hello world!</b><br>" + json[i].address)
+                }
                 apartments.push(json[i]);
             }
             drawComplexesTable();
@@ -16,35 +19,43 @@ $(document).ready(function() {
 
     function drawComplexesTable() {
         $("#jsGrid").jsGrid({
-            height: "90%",
+            height: "500px",
             width: "100%",
 
             filtering: true,
-            editing: true,
             sorting: true,
-            paging: true,
             autoload: true,
 
             pageSize: 15,
             pageButtonCount: 5,
 
-            deleteConfirm: "Do you really want to delete the client?",
-
             controller: {
                 loadData: function (filter) {
-                    return $.ajax({
-                        type: "GET",
-                        url: "/complexes/load",
-                        data: filter,
-                        dataType: "JSON"
+                    var apartmentsList = [];
+                    jQuery.ajax({
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        processData: false,
+                        type: 'POST',
+                        url: 'apartments/load',
+                        data: JSON.stringify(filter),
+                        success: function (result) {
+                            apartmentsList = result;
+                        },
+                        async: false
                     });
+                    return apartmentsList;
                 }
             },
 
             fields: [
-                { name: "ID", type: "text", width: 150 },
-                { name: "cianId", type: "number", width: 50 },
-                { type: "control" }
+                { name: "url", type: "text", width: 50 },
+                { name: "houseType", type: "text", width: 50 },
+                { name: "totalArea", type: "text", width: 50 },
+                { name: "roomsArea", type: "text", width: 50 },
+                { name: "livingArea", type: "text", width: 50 },
+                { name: "price", type: "text", width: 50 },
+                { name: "address", type: "text", width: 50 }
             ]
         });
     }
