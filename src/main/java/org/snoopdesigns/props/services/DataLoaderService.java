@@ -12,6 +12,7 @@ import org.snoopdesigns.props.crawler.CrawlerFactory;
 import org.snoopdesigns.props.persistence.repository.ApartmentsRepository;
 import org.snoopdesigns.props.persistence.repository.ComplexRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,6 +24,12 @@ public class DataLoaderService {
     @Autowired
     private ApartmentsRepository apartmentsRepository;
 
+    @Value("${proxyHost}")
+    private String proxyHost;
+
+    @Value("${proxyPort}")
+    private Integer proxyPort;
+
     public void loadData() throws Exception {
 
         String crawlStorageFolder = "/home/dimka/crawler";
@@ -33,6 +40,9 @@ public class DataLoaderService {
         config.setCrawlStorageFolder(crawlStorageFolder);
         config.setResumableCrawling(true);
         config.setMaxPagesToFetch(150);
+        config.setProxyHost(proxyHost);
+        config.setProxyPort(proxyPort);
+        config.setUserAgentString("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36");
 
         PageFetcher pageFetcher = new PageFetcher(config);
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();

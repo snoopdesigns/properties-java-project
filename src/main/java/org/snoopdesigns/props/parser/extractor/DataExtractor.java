@@ -13,7 +13,7 @@ public abstract class DataExtractor {
             String val = this.extractString(element, extractKey);
             return extractKey.parse(val);
         } catch (Exception e) {
-            logger.warn("Unable to extract field: " + extractKey.getValue() + "element: " + element);
+            logger.warn("Unable to extract field: " + extractKey.getValue());
             return null;
         }
     }

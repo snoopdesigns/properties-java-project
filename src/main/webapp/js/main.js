@@ -1,38 +1,50 @@
-var complexes = [];
+var apartments = [];
+
+
 
 $(document).ready(function() {
 
     $(document).ready(function () {
-        $.getJSON("http://localhost:8080/complexes/load", function (json) {
+        $.getJSON("http://localhost:8080/apartments/load", function (json) {
             for (var i = 0; i < json.length; i++) {
-                complexes.push(json[i]);
+                //L.marker([json[i].lat, json[i].lng]).addTo(mymap);
+                apartments.push(json[i]);
             }
             drawComplexesTable();
         });
     });
 
-    $(document).ready(function () {
-        $.getJSON("http://localhost:8080/apartments/load", function (json) {
-            var tr;
-            for (var i = 0; i < json.length; i++) {
-                L.marker([json[i].lat, json[i].lng]).addTo(mymap);
-            }
-        });
-    });
-
     function drawComplexesTable() {
         $("#jsGrid").jsGrid({
+            height: "90%",
             width: "100%",
-            height: "800px",
+
             filtering: true,
+            editing: true,
             sorting: true,
             paging: true,
-            pageSize: 10,
+            autoload: true,
+
+            pageSize: 15,
             pageButtonCount: 5,
-            data: complexes,
+
+            deleteConfirm: "Do you really want to delete the client?",
+
+            controller: {
+                loadData: function (filter) {
+                    return $.ajax({
+                        type: "GET",
+                        url: "/complexes/load",
+                        data: filter,
+                        dataType: "JSON"
+                    });
+                }
+            },
+
             fields: [
-                { name: "id", type: "text", width: 150, autosearch: true },
-                { name: "cianId", type: "number", width: 50, autosearch: true }
+                { name: "ID", type: "text", width: 150 },
+                { name: "cianId", type: "number", width: 50 },
+                { type: "control" }
             ]
         });
     }

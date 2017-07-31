@@ -24,7 +24,7 @@ public class ComplexesController {
 
     @RequestMapping(value = "/load")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Complex> load() throws Exception {
+    public List<Complex> load(String request) throws Exception {
         List<Complex> complexes = new ArrayList<>();
         complexes.addAll(complexRepository.findAll());
         return complexes;
