@@ -1,11 +1,6 @@
 package org.snoopdesigns.props.crawler;
 
-import java.io.IOException;
-
-import com.google.code.geocoder.Geocoder;
-import com.google.code.geocoder.model.GeocodeResponse;
-import com.google.code.geocoder.model.GeocoderRequest;
-import com.google.code.geocoder.model.GeocoderStatus;
+import com.google.code.geocoder.model.LatLng;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.url.WebURL;
@@ -16,6 +11,7 @@ import org.snoopdesigns.props.persistence.entities.Apartment;
 import org.snoopdesigns.props.persistence.entities.Complex;
 import org.snoopdesigns.props.persistence.repository.ApartmentsRepository;
 import org.snoopdesigns.props.persistence.repository.ComplexRepository;
+import org.snoopdesigns.props.services.GeocoderService;
 
 public class Crawler extends WebCrawler {
 
@@ -24,15 +20,16 @@ public class Crawler extends WebCrawler {
     private CrawlParameters crawlParameters;
     private ComplexRepository complexRepository;
     private ApartmentsRepository apartmentsRepository;
+    private GeocoderService geocoderService;
 
     private ApartmentPageParser parser = new ApartmentPageParser();
-    private Geocoder geocoder = new Geocoder();
 
     public Crawler(CrawlParameters crawlParameters, ComplexRepository complexRepository,
-                   ApartmentsRepository apartmentsRepository) {
+                   ApartmentsRepository apartmentsRepository, GeocoderService geocoderService) {
         this.crawlParameters = crawlParameters;
         this.complexRepository = complexRepository;
         this.apartmentsRepository = apartmentsRepository;
+        this.geocoderService = geocoderService;
     }
 
     @Override
@@ -53,20 +50,17 @@ public class Crawler extends WebCrawler {
             if (ap.getComplex() != null) {
                 Complex complex = complexRepository.findByCianId(ap.getComplex().getCianId());
                 if (complex == null) {
-                    try {
-                        GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(ap.getComplex().getAddress(), "RU"));
-                        if (resp.getStatus().equals(GeocoderStatus.OK)) {
-                            logger.info("Location: " + resp.getResults().get(0).getGeometry().getLocation());
-                            ap.getComplex().setLat(resp.getResults().get(0).getGeometry().getLocation().getLat().floatValue());
-                            ap.getComplex().setLng(resp.getResults().get(0).getGeometry().getLocation().getLng().floatValue());
-                        } else {
-                            logger.warn("Unable to geocode location: " + ap.getComplex().getAddress());
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    LatLng geocodeResult = this.geocoderService.geocodeLocation(ap.getComplex().getAddress());
+                    ap.getComplex().setLat(geocodeResult.getLat().floatValue());
+                    ap.getComplex().setLng(geocodeResult.getLng().floatValue());
                     complex = complexRepository.save(ap.getComplex());
                     logger.info("Saved new complex: id = " + complex.getId() + ", cianId = " + complex.getCianId());
+                } else if (complex.getLat() == null) {
+                    LatLng geocodeResult = this.geocoderService.geocodeLocation(ap.getComplex().getAddress());
+                    complex.setLat(geocodeResult.getLat().floatValue());
+                    complex.setLng(geocodeResult.getLng().floatValue());
+                    complex = complexRepository.save(complex);
+                    logger.info("Updated location for complex [id = " + complex.getId() + ", cianId = " + complex.getCianId() + "]");
                 }
                 ap.setComplex(complex);
             }

@@ -37,7 +37,10 @@ $(document).ready(function () {
         },
 
         fields: [
-            { name: "url", type: "text", width: 50 },
+            { name: "url",
+                itemTemplate: function(value) {
+                    return $("<a>").attr("href", value).text(value);
+                },type: "text", width: 50 },
             { name: "houseType", type: "text", width: 50 },
             { name: "totalArea", type: "text", width: 50 },
             { name: "roomsArea", type: "text", width: 50 },

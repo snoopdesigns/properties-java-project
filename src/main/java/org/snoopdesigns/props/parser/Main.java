@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
+import com.google.code.geocoder.Geocoder;
+import com.google.code.geocoder.model.GeocodeResponse;
+import com.google.code.geocoder.model.GeocoderRequest;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,6 +18,14 @@ import org.snoopdesigns.props.persistence.entities.Apartment;
 public class Main {
 
     public static void main(String[] args) throws Exception {
+
+        System.setProperty("http.proxyHost", "proxy.t-systems.ru");
+        System.setProperty("http.proxyPort", "3128");
+        System.setProperty("https.proxyHost", "proxy.t-systems.ru");
+        System.setProperty("https.proxyPort", "3128");
+        Geocoder geocoder = new Geocoder();
+        GeocodeResponse resp = geocoder.geocode(new GeocoderRequest("Ленинградская область, Тосненский район, Федоровское с/пос, Есенин вилладж кп", "RU"));
+
         ApartmentPageParser parser = new ApartmentPageParser();
         String url = "https://spb.cian.ru/sale/flat/150295433/";
         String contents = readContents(url);
