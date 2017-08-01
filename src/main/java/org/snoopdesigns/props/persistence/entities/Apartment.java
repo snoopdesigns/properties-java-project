@@ -14,9 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.snoopdesigns.props.controllers.CustomApartmentsSerializer;
 
 @Entity
 @Table(name = "APARTMENTS")
+@JsonSerialize(using=CustomApartmentsSerializer.class)
 public class Apartment {
 
     @Id
@@ -27,9 +30,9 @@ public class Apartment {
     @Column(name = "CIAN_ID")
     private String cianId;
 
-    @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="COMPLEX_ID")
+    @JsonIgnore
     private Complex complex;
 
     @Column(name = "URL")
@@ -71,12 +74,6 @@ public class Apartment {
 
     @Column(name = "ADDRESS")
     private String address;
-
-    @Column(name = "LAT")
-    private Float lat;
-
-    @Column(name = "LNG")
-    private Float lng;
 
     public Apartment() {}
 
@@ -194,21 +191,5 @@ public class Apartment {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Float getLat() {
-        return lat;
-    }
-
-    public void setLat(Float lat) {
-        this.lat = lat;
-    }
-
-    public Float getLng() {
-        return lng;
-    }
-
-    public void setLng(Float lng) {
-        this.lng = lng;
     }
 }

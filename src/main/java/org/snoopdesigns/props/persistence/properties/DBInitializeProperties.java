@@ -46,13 +46,15 @@ public class DBInitializeProperties {
                                 "PRICE INTEGER, " +
                                 "PHONE varchar(30), " +
                                 "REPAIRS varchar(30), " +
-                                "LAT REAL, " +
-                                "LNG REAL, " +
                                 "ADDRESS varchar(30))");
                 statement.executeUpdate(
                         "CREATE TABLE COMPLEXES(" +
                                 "ID INTEGER Primary key, " +
-                                "CIAN_ID INTEGER)");
+                                "CIAN_ID INTEGER, " +
+                                "NAME varchar(40), " +
+                                "ADDRESS varchar(50), " +
+                                "LAT REAL, " +
+                                "LNG REAL)");
                 statement.close();
                 connection.close();
             } catch (SQLException e) {

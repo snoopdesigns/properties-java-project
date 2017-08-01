@@ -44,9 +44,17 @@ public class ValueParsers {
     public static final ValueParser<Integer> COMPLEX_ID_PARSER = new ValueParser<Integer>() {
         @Override
         public Integer parse(String value) {
+            value = value.substring(value.indexOf("<a href=") + 9, value.indexOf("/\"") + 1);
             value = value.substring(value.lastIndexOf("-"), value.length()-1);
             value = value.replaceAll("[^\\d.]", "");
             return Integer.valueOf(value);
+        }
+    };
+
+    public static final ValueParser<String> COMPLEX_NAME_PARSER = new ValueParser<String>() {
+        @Override
+        public String parse(String value) {
+            return value.substring(value.indexOf("\">")+2, value.indexOf("</a>"));
         }
     };
 }

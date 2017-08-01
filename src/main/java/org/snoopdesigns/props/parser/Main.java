@@ -17,7 +17,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         ApartmentPageParser parser = new ApartmentPageParser();
         String url = "https://spb.cian.ru/sale/flat/150295433/";
-        String contents = readContentsTest(url);
+        String contents = readContents(url);
         Apartment ap = parser.parse(url, contents);
         System.out.println(ap);
     }

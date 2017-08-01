@@ -3,7 +3,7 @@ package org.snoopdesigns.props.parser.extractor;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class ElementDataExtractor extends DataExtractor {
+public class ElementTextExtractor extends DataExtractor {
 
     @Override
     protected <T> String extractString(Element element, ExtractKey<T> extractKey) {

@@ -1,5 +1,11 @@
 package org.snoopdesigns.props.crawler;
 
+import java.io.IOException;
+
+import com.google.code.geocoder.Geocoder;
+import com.google.code.geocoder.model.GeocodeResponse;
+import com.google.code.geocoder.model.GeocoderRequest;
+import com.google.code.geocoder.model.GeocoderStatus;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.url.WebURL;
@@ -19,7 +25,8 @@ public class Crawler extends WebCrawler {
     private ComplexRepository complexRepository;
     private ApartmentsRepository apartmentsRepository;
 
-    ApartmentPageParser parser = new ApartmentPageParser();
+    private ApartmentPageParser parser = new ApartmentPageParser();
+    private Geocoder geocoder = new Geocoder();
 
     public Crawler(CrawlParameters crawlParameters, ComplexRepository complexRepository,
                    ApartmentsRepository apartmentsRepository) {
@@ -46,6 +53,18 @@ public class Crawler extends WebCrawler {
             if (ap.getComplex() != null) {
                 Complex complex = complexRepository.findByCianId(ap.getComplex().getCianId());
                 if (complex == null) {
+                    try {
+                        GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(ap.getComplex().getAddress(), "RU"));
+                        if (resp.getStatus().equals(GeocoderStatus.OK)) {
+                            logger.info("Location: " + resp.getResults().get(0).getGeometry().getLocation());
+                            ap.getComplex().setLat(resp.getResults().get(0).getGeometry().getLocation().getLat().floatValue());
+                            ap.getComplex().setLng(resp.getResults().get(0).getGeometry().getLocation().getLng().floatValue());
+                        } else {
+                            logger.warn("Unable to geocode location: " + ap.getComplex().getAddress());
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     complex = complexRepository.save(ap.getComplex());
                     logger.info("Saved new complex: id = " + complex.getId() + ", cianId = " + complex.getCianId());
                 }

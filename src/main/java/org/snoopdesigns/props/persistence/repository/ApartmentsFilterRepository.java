@@ -29,6 +29,7 @@ public class ApartmentsFilterRepository {
                 .filter(a -> af.getLivingArea() == null || af.getLivingArea().isEmpty() || (a.getLivingArea() != null && a.getLivingArea().toString().startsWith(af.getLivingArea())))
                 .filter(a -> af.getPrice() == null || af.getPrice().isEmpty() || (a.getPrice() != null && a.getPrice().toString().startsWith(af.getPrice())))
                 .filter(a -> af.getAddress() == null || af.getAddress().isEmpty() || (a.getAddress() != null && a.getAddress().startsWith(af.getAddress())))
+                .filter(a -> af.getComplexName() == null || af.getComplexName().isEmpty() || (a.getComplex() != null && a.getComplex().getName() != null && a.getComplex().getName().startsWith(af.getComplexName())))
                 .collect(Collectors.toList());
     }
 }

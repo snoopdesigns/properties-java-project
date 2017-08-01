@@ -1,18 +1,12 @@
 package org.snoopdesigns.props.parser;
 
-import java.io.IOException;
-
-import com.google.code.geocoder.Geocoder;
-import com.google.code.geocoder.model.GeocodeResponse;
-import com.google.code.geocoder.model.GeocoderRequest;
-import com.google.code.geocoder.model.GeocoderStatus;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.snoopdesigns.props.parser.extractor.ElementDataExtractor;
+import org.snoopdesigns.props.parser.extractor.ElementTextExtractor;
 import org.snoopdesigns.props.parser.extractor.ExtractKey;
-import org.snoopdesigns.props.parser.extractor.HrefDataExtractor;
+import org.snoopdesigns.props.parser.extractor.ElementHtmlExtractor;
 import org.snoopdesigns.props.parser.extractor.TableDataExtractor;
 import org.snoopdesigns.props.parser.extractor.ValueParsers;
 import org.snoopdesigns.props.persistence.entities.Apartment;
@@ -23,10 +17,9 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
 
     private final static Logger logger = LoggerFactory.getLogger(ApartmentPageParser.class);
 
-    private Geocoder geocoder = new Geocoder();
     private TableDataExtractor tableDataExtractor = new TableDataExtractor();
-    private ElementDataExtractor elementDataExtractor = new ElementDataExtractor();
-    private HrefDataExtractor hrefDataExtractor = new HrefDataExtractor();
+    private ElementTextExtractor elementTextExtractor = new ElementTextExtractor();
+    private ElementHtmlExtractor elementHtmlExtractor = new ElementHtmlExtractor();
     private ExtractKey<FloorInfo> FLOOR_KEY = new ExtractKey<>(ValueParsers.FLOOR_PARSER, "этаж");
     private ExtractKey<String> HOUSE_TYPE = new ExtractKey<>(ValueParsers.STRING_PARSER, "тип дома");
     private ExtractKey<String> SELL_TYPE = new ExtractKey<>(ValueParsers.STRING_PARSER, "тип продажи");
@@ -42,7 +35,8 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
     private ExtractKey<Integer> PRICE = new ExtractKey<>(ValueParsers.PRICE_PARSER, "object_descr_price");
     private ExtractKey<String> ADDRESS = new ExtractKey<>(ValueParsers.STRING_PARSER, "object_descr_addr");
 
-    private ExtractKey<Integer> COMPLEX = new ExtractKey<>(ValueParsers.COMPLEX_ID_PARSER, "object_descr_title");
+    private ExtractKey<Integer> COMPLEX_ID = new ExtractKey<>(ValueParsers.COMPLEX_ID_PARSER, "object_descr_title");
+    private ExtractKey<String> COMPLEX_NAME = new ExtractKey<>(ValueParsers.COMPLEX_NAME_PARSER, "object_descr_title");
 
     @Override
     public Apartment processContents(String url, Element bodyDocument) {
@@ -63,30 +57,20 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
         String cr = tableDataExtractor.extractValue(infoElement.child(0), COMPLEX_READY);
         apartment.setPhone(tableDataExtractor.extractValue(infoElement.child(0), PHONE));
         apartment.setRepairs(tableDataExtractor.extractValue(infoElement.child(0), REPAIRS));
-        apartment.setPrice(elementDataExtractor.extractValue(bodyDocument, PRICE));
-        apartment.setAddress(elementDataExtractor.extractValue(bodyDocument, ADDRESS));
+        apartment.setPrice(elementTextExtractor.extractValue(bodyDocument, PRICE));
+        apartment.setAddress(elementTextExtractor.extractValue(bodyDocument, ADDRESS));
 
-        Integer complexId = hrefDataExtractor.extractValue(bodyDocument, COMPLEX);
+        Integer complexId = elementHtmlExtractor.extractValue(bodyDocument, COMPLEX_ID);
+        String complexName = elementHtmlExtractor.extractValue(bodyDocument, COMPLEX_NAME);
         if (complexId == null) {
             logger.warn("Unable to extract complexId from page: " + url);
         } else {
-            apartment.setComplex(new Complex(complexId));
+            apartment.setComplex(new Complex(complexId, complexName,
+                    elementTextExtractor.extractValue(bodyDocument, ADDRESS)));
         }
         apartment.setCianId(url.substring(url.indexOf("flat/") + 5, url.length() - 1));
         apartment.setUrl(url);
 
-        try {
-            GeocodeResponse resp = geocoder.geocode(new GeocoderRequest(apartment.getAddress(), "RU"));
-            if (resp.getStatus().equals(GeocoderStatus.OK)) {
-                logger.info("Location: " + resp.getResults().get(0).getGeometry().getLocation());
-                apartment.setLat(resp.getResults().get(0).getGeometry().getLocation().getLat().floatValue());
-                apartment.setLng(resp.getResults().get(0).getGeometry().getLocation().getLng().floatValue());
-            } else {
-                logger.warn("Unable to geocode location: " + apartment.getAddress());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return apartment;
     }
 }

@@ -17,6 +17,7 @@ public class ApartmentsFilter {
     private String address;
     private String lat;
     private String lng;
+    private String complexName;
 
     public ApartmentsFilter() {
     }
@@ -139,5 +140,13 @@ public class ApartmentsFilter {
 
     public void setLng(String lng) {
         this.lng = lng;
+    }
+
+    public String getComplexName() {
+        return complexName;
+    }
+
+    public void setComplexName(String complexName) {
+        this.complexName = complexName;
     }
 }
