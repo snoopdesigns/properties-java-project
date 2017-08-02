@@ -42,7 +42,7 @@ public class DataLoaderService {
         CrawlConfig config = new CrawlConfig();
         config.setCrawlStorageFolder(crawlStorageFolder);
         config.setResumableCrawling(true);
-        config.setMaxPagesToFetch(150);
+        config.setMaxPagesToFetch(300);
         if (proxyHost != null && proxyPort != null) {
             config.setProxyHost(proxyHost);
             config.setProxyPort(proxyPort);

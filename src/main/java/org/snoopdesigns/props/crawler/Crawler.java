@@ -51,14 +51,18 @@ public class Crawler extends WebCrawler {
                 Complex complex = complexRepository.findByCianId(ap.getComplex().getCianId());
                 if (complex == null) {
                     LatLng geocodeResult = this.geocoderService.geocodeLocation(ap.getComplex().getAddress());
-                    ap.getComplex().setLat(geocodeResult.getLat().floatValue());
-                    ap.getComplex().setLng(geocodeResult.getLng().floatValue());
+                    if (geocodeResult != null) {
+                        ap.getComplex().setLat(geocodeResult.getLat().floatValue());
+                        ap.getComplex().setLng(geocodeResult.getLng().floatValue());
+                    }
                     complex = complexRepository.save(ap.getComplex());
                     logger.info("Saved new complex: id = " + complex.getId() + ", cianId = " + complex.getCianId());
                 } else if (complex.getLat() == null) {
                     LatLng geocodeResult = this.geocoderService.geocodeLocation(ap.getComplex().getAddress());
-                    complex.setLat(geocodeResult.getLat().floatValue());
-                    complex.setLng(geocodeResult.getLng().floatValue());
+                    if (geocodeResult != null) {
+                        complex.setLat(geocodeResult.getLat().floatValue());
+                        complex.setLng(geocodeResult.getLng().floatValue());
+                    }
                     complex = complexRepository.save(complex);
                     logger.info("Updated location for complex [id = " + complex.getId() + ", cianId = " + complex.getCianId() + "]");
                 }
