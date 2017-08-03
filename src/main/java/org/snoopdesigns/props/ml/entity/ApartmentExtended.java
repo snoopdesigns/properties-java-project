@@ -6,8 +6,8 @@ public class ApartmentExtended extends Apartment {
 
     private Boolean isFirstFloor;
     private Boolean isLastFloor;
-    private Float distanceToCenter;
-    private String closestMetro;
+    private Double distanceToCenter;
+    private MetroInfo metroInfo;
 
     public ApartmentExtended() {
         super();
@@ -46,19 +46,19 @@ public class ApartmentExtended extends Apartment {
         isLastFloor = lastFloor;
     }
 
-    public Float getDistanceToCenter() {
+    public Double getDistanceToCenter() {
         return distanceToCenter;
     }
 
-    public void setDistanceToCenter(Float distanceToCenter) {
+    public void setDistanceToCenter(Double distanceToCenter) {
         this.distanceToCenter = distanceToCenter;
     }
 
-    public String getClosestMetro() {
-        return closestMetro;
+    public MetroInfo getMetroInfo() {
+        return metroInfo;
     }
 
-    public void setClosestMetro(String closestMetro) {
-        this.closestMetro = closestMetro;
+    public void setMetroInfo(MetroInfo metroInfo) {
+        this.metroInfo = metroInfo;
     }
 }

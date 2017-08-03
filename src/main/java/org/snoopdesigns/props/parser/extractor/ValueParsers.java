@@ -7,6 +7,10 @@ public class ValueParsers {
     public static final ValueParser<FloorInfo> FLOOR_PARSER = new ValueParser<FloorInfo>() {
         @Override
         public FloorInfo parse(String value) {
+            value = value.replaceAll("\u00A0","");
+            if (value.contains("(")) { // contains 'Квартиры на других этажах'
+                value = value.substring(0, value.indexOf("(") - 1);
+            }
             String[] floorInfo = value.replaceAll("\u00A0","").split("/");
             return new FloorInfo(Integer.valueOf(floorInfo[0]), Integer.valueOf(floorInfo[1]));
         }

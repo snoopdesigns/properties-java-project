@@ -1,11 +1,16 @@
 $(document).ready(function () {
     $.getJSON("http://localhost:8080/complexes/load", function (json) {
+        $('#complexesInfo').html("Complexes: " + json.length);
         for (var i = 0; i < json.length; i++) {
             if (json[i].lat != null && json[i].lng != null) {
                 var marker = L.marker([json[i].lat, json[i].lng]).addTo(mymap);
                 marker.bindPopup("<b>"+ json[i].name + "</b><br>" + json[i].address)
             }
         }
+    });
+
+    $.getJSON("http://localhost:8080/apartments/load", function (json) {
+        $('#apartmentsInfo').html("Apartments: " + json.length);
     });
 
     $("#jsGrid").jsGrid({

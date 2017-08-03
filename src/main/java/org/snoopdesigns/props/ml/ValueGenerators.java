@@ -1,6 +1,7 @@
 package org.snoopdesigns.props.ml;
 
 import org.snoopdesigns.props.ml.entity.ApartmentExtended;
+import org.snoopdesigns.props.ml.entity.MetroInfo;
 import org.snoopdesigns.props.ml.utils.Utils;
 
 public class ValueGenerators {
@@ -22,17 +23,25 @@ public class ValueGenerators {
     public static final SynteticFeatureGenerator<Double> DISTANCE_TO_CENTER = new SynteticFeatureGenerator<Double>() {
         @Override
         public Double generate(ApartmentExtended apartmentExtended) {
-            return Utils.distance(apartmentExtended.getComplex().getLat().doubleValue(),
-                    59.936311d,
-                    apartmentExtended.getComplex().getLng().doubleValue(),
-                    30.319862d);
+            if (apartmentExtended.getComplex().getLat() != null && apartmentExtended.getComplex().getLng() != null) {
+                return Utils.distance(apartmentExtended.getComplex().getLat().doubleValue(),
+                        59.936311d,
+                        apartmentExtended.getComplex().getLng().doubleValue(),
+                        30.319862d);
+            } else {
+                return null;
+            }
         }
     };
 
-    public static final SynteticFeatureGenerator<String> CLOSEST_METRO = new SynteticFeatureGenerator<String>() {
+    public static final SynteticFeatureGenerator<MetroInfo> CLOSEST_METRO = new SynteticFeatureGenerator<MetroInfo>() {
         @Override
-        public String generate(ApartmentExtended apartmentExtended) {
-            return Utils.findClosestMetro(apartmentExtended.getComplex().getLat(), apartmentExtended.getComplex().getLng());
+        public MetroInfo generate(ApartmentExtended apartmentExtended) {
+            if (apartmentExtended.getComplex().getLat() != null && apartmentExtended.getComplex().getLng() != null) {
+                return Utils.findClosestMetro(apartmentExtended.getComplex().getLat(), apartmentExtended.getComplex().getLng());
+            } else {
+                return null;
+            }
         }
     };
 }

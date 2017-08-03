@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.snoopdesigns.props.ml.entity.MetroInfo;
+
 public class Utils {
 
-    public static double distance(double lat1, double lat2, double lon1, double lon2) {
+    public static Double distance(Double lat1, Double lat2, Double lon1, Double lon2) {
 
         final int R = 6371; // Radius of the earth
 
@@ -21,20 +23,26 @@ public class Utils {
         return R * c * 1000; // convert to meters
     }
 
-    public static String findClosestMetro(Float lat, Float lng) {
+    public static MetroInfo findClosestMetro(Float lat, Float lng) {
         List<String> metros = loadMetroData();
         int closestIndex = -1;
         double closestDist = 100000000;
         for (int i = 0; i < metros.size(); i++) {
-            double metroLat = Double.valueOf(metros.get(i).split(";")[1]);
-            double metroLng = Double.valueOf(metros.get(i).split(";")[2]);
-            double dist = distance(lat, metroLat, lng, metroLng);
+            Double metroLat = Double.valueOf(metros.get(i).split(";")[1]);
+            Double metroLng = Double.valueOf(metros.get(i).split(";")[2]);
+            Double dist = distance(lat.doubleValue(), metroLat, lng.doubleValue(), metroLng);
             if (dist < closestDist) {
                 closestDist = dist;
                 closestIndex = i;
             }
         }
-        return metros.get(closestIndex).split(";")[0];
+        MetroInfo metroInfo = new MetroInfo();
+        metroInfo.setDistanceToMetro(closestDist);
+        String[] metroInfos = metros.get(closestIndex).split(";");
+        metroInfo.setMetroName(metroInfos[0]);
+        metroInfo.setMetroLat(Float.valueOf(metroInfos[1]));
+        metroInfo.setMetroLng(Float.valueOf(metroInfos[2]));
+        return metroInfo;
     }
 
     private static List<String> loadMetroData() {

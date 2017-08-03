@@ -57,7 +57,7 @@ public class DataLoaderService {
 
         controller.addSeed("https://www.cian.ru/newobjects/list/?deal_type=sale&engine_version=2&offer_type=newobject&p=1&region=-2&room1=1");
         CrawlParameters crawlParameters = new CrawlParameters(true, false);
-        controller.start(new CrawlerFactory(crawlParameters, complexRepository, apartmentsRepository, geocoderService), numberOfCrawlers);
+        controller.startNonBlocking(new CrawlerFactory(crawlParameters, complexRepository, apartmentsRepository, geocoderService), numberOfCrawlers);
     }
 
     private boolean deleteCrawlDirectory(File directory) {

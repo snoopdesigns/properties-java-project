@@ -27,7 +27,7 @@ public class Main {
         GeocodeResponse resp = geocoder.geocode(new GeocoderRequest("Ленинградская область, Тосненский район, Федоровское с/пос, Есенин вилладж кп", "RU"));
 
         ApartmentPageParser parser = new ApartmentPageParser();
-        String url = "https://spb.cian.ru/sale/flat/150295433/";
+        String url = "https://spb.cian.ru/sale/flat/150296416/";
         String contents = readContents(url);
         Apartment ap = parser.parse(url, contents);
         System.out.println(ap);
