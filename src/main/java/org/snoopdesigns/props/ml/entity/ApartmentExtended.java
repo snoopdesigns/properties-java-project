@@ -8,6 +8,8 @@ public class ApartmentExtended extends Apartment {
     private Boolean isLastFloor;
     private Double distanceToCenter;
     private MetroInfo metroInfo;
+    private HouseType houseTypeEnum;
+    private BuildingType buildingType;
 
     public ApartmentExtended() {
         super();
@@ -60,5 +62,21 @@ public class ApartmentExtended extends Apartment {
 
     public void setMetroInfo(MetroInfo metroInfo) {
         this.metroInfo = metroInfo;
+    }
+
+    public HouseType getHouseTypeEnum() {
+        return houseTypeEnum;
+    }
+
+    public void setHouseTypeEnum(HouseType houseTypeEnum) {
+        this.houseTypeEnum = houseTypeEnum;
+    }
+
+    public BuildingType getBuildingType() {
+        return buildingType;
+    }
+
+    public void setBuildingType(BuildingType buildingType) {
+        this.buildingType = buildingType;
     }
 }

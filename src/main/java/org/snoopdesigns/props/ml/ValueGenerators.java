@@ -1,6 +1,8 @@
 package org.snoopdesigns.props.ml;
 
 import org.snoopdesigns.props.ml.entity.ApartmentExtended;
+import org.snoopdesigns.props.ml.entity.BuildingType;
+import org.snoopdesigns.props.ml.entity.HouseType;
 import org.snoopdesigns.props.ml.entity.MetroInfo;
 import org.snoopdesigns.props.ml.utils.Utils;
 
@@ -42,6 +44,37 @@ public class ValueGenerators {
             } else {
                 return null;
             }
+        }
+    };
+    public static final SynteticFeatureGenerator<HouseType> HOUSE_TYPE = new SynteticFeatureGenerator<HouseType>() {
+        @Override
+        public HouseType generate(ApartmentExtended apartmentExtended) {
+            if (apartmentExtended.getHouseType() != null) {
+                if (apartmentExtended.getHouseType().contains("кирпичный")) {
+                    return HouseType.BRICK_MONOLITIC;
+                }
+                if (apartmentExtended.getHouseType().contains("кирпично-монолитный")) {
+                    return HouseType.BRICK_MONOLITIC;
+                }
+                if (apartmentExtended.getHouseType().contains("панельный")) {
+                    return HouseType.PANEL;
+                }
+            }
+            return null;
+        }
+    };
+    public static final SynteticFeatureGenerator<BuildingType> BUILDING_TYPE = new SynteticFeatureGenerator<BuildingType>() {
+        @Override
+        public BuildingType generate(ApartmentExtended apartmentExtended) {
+            if (apartmentExtended.getHouseType() != null) {
+                if (apartmentExtended.getHouseType().contains("новостройка")) {
+                    return BuildingType.NEW;
+                }
+                if (apartmentExtended.getHouseType().contains("вторич")) {
+                    return BuildingType.SECONDARY_MARKET;
+                }
+            }
+            return null;
         }
     };
 }
