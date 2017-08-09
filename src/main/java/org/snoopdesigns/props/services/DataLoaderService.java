@@ -1,6 +1,7 @@
 package org.snoopdesigns.props.services;
 
 import java.io.File;
+import java.util.List;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -9,6 +10,8 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import org.snoopdesigns.props.crawler.CrawlParameters;
 import org.snoopdesigns.props.crawler.CrawlerFactory;
+import org.snoopdesigns.props.crawler.nextgen.CrawlerServiceImpl;
+import org.snoopdesigns.props.persistence.entities.Complex;
 import org.snoopdesigns.props.persistence.repository.ApartmentsRepository;
 import org.snoopdesigns.props.persistence.repository.ComplexRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class DataLoaderService {
 
     @Autowired
     private GeocoderService geocoderService;
+
+    @Autowired
+    private CrawlerServiceImpl crawlerService;
 
     @Value("${proxyHost:#{null}}")
     private String proxyHost;
@@ -56,8 +62,16 @@ public class DataLoaderService {
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
         controller.addSeed("https://www.cian.ru/newobjects/list/?deal_type=sale&engine_version=2&offer_type=newobject&p=1&region=-2&room1=1");
-        CrawlParameters crawlParameters = new CrawlParameters(true, false);
+        CrawlParameters crawlParameters = new CrawlParameters(10, true, false);
         controller.startNonBlocking(new CrawlerFactory(crawlParameters, complexRepository, apartmentsRepository, geocoderService), numberOfCrawlers);
+    }
+
+    public void loadDataNew() {
+        List<Complex> complexes = this.crawlerService.startCrawling(new CrawlParameters(10, true, false));
+        complexRepository.save(complexes);
+        for (Complex c : complexes) {
+            apartmentsRepository.save(c.getApartments());
+        }
     }
 
     private boolean deleteCrawlDirectory(File directory) {

@@ -4,15 +4,16 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.snoopdesigns.props.parser.extractor.ElementHtmlExtractor;
 import org.snoopdesigns.props.parser.extractor.ElementTextExtractor;
 import org.snoopdesigns.props.parser.extractor.ExtractKey;
-import org.snoopdesigns.props.parser.extractor.ElementHtmlExtractor;
 import org.snoopdesigns.props.parser.extractor.TableDataExtractor;
 import org.snoopdesigns.props.parser.extractor.ValueParsers;
 import org.snoopdesigns.props.persistence.entities.Apartment;
-import org.snoopdesigns.props.persistence.entities.Complex;
 import org.snoopdesigns.props.persistence.entities.FloorInfo;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ApartmentPageParser extends AbstractParser<Apartment> {
 
     private final static Logger logger = LoggerFactory.getLogger(ApartmentPageParser.class);
@@ -34,9 +35,6 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
     private ExtractKey<String> REPAIRS = new ExtractKey<>(ValueParsers.STRING_PARSER, "ремонт");
     private ExtractKey<Integer> PRICE = new ExtractKey<>(ValueParsers.PRICE_PARSER, "object_descr_price");
     private ExtractKey<String> ADDRESS = new ExtractKey<>(ValueParsers.STRING_PARSER, "object_descr_addr");
-
-    private ExtractKey<Integer> COMPLEX_ID = new ExtractKey<>(ValueParsers.COMPLEX_ID_PARSER, "object_descr_title");
-    private ExtractKey<String> COMPLEX_NAME = new ExtractKey<>(ValueParsers.COMPLEX_NAME_PARSER, "object_descr_title");
 
     @Override
     public Apartment processContents(String url, Element bodyDocument) {
@@ -60,14 +58,6 @@ public class ApartmentPageParser extends AbstractParser<Apartment> {
         apartment.setPrice(elementTextExtractor.extractValue(bodyDocument, PRICE));
         apartment.setAddress(elementTextExtractor.extractValue(bodyDocument, ADDRESS));
 
-        Integer complexId = elementHtmlExtractor.extractValue(bodyDocument, COMPLEX_ID);
-        String complexName = elementHtmlExtractor.extractValue(bodyDocument, COMPLEX_NAME);
-        if (complexId == null) {
-            logger.warn("Unable to extract complexId from page: " + url);
-        } else {
-            apartment.setComplex(new Complex(complexId, complexName,
-                    elementTextExtractor.extractValue(bodyDocument, ADDRESS)));
-        }
         apartment.setCianId(url.substring(url.indexOf("flat/") + 5, url.length() - 1));
         apartment.setUrl(url);
 

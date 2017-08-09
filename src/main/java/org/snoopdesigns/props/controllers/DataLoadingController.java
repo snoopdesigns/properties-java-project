@@ -29,6 +29,12 @@ public class DataLoadingController {
         return "OK";
     }
 
+    @RequestMapping(value = "/loadnew")
+    public String loadDataNew() throws Exception {
+        dataLoader.loadDataNew();
+        return "OK";
+    }
+
     @RequestMapping(value = "/process")
     public String preprocessData() throws Exception {
         List<ApartmentExtended> result = dataPreprocessor.preprocessData(apartmentsRepository.findAll());
