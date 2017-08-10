@@ -1,84 +1,40 @@
-package org.snoopdesigns.props.persistence.entities;
+package org.snoopdesigns.props.crawler.nextgen.entities;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.snoopdesigns.props.controllers.CustomApartmentsSerializer;
 
-@Entity
-@Table(name = "APARTMENTS")
 @JsonSerialize(using=CustomApartmentsSerializer.class)
 public class Apartment {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    @Column(name = "ID")
-    private Long id;
-
-    @Column(name = "CIAN_ID")
     private String cianId;
-
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="COMPLEX_ID")
-    @JsonIgnore
     private Complex complex;
-
-    @Column(name = "URL")
     private String url;
-
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name="floorNumber", column=@Column(name="FLOOR_NUMBER")),
-            @AttributeOverride(name="floorTotal", column=@Column(name="FLOOR_TOTAL"))
-    })
     private FloorInfo floorInfo;
-
-    @Column(name = "HOUSE_TYPE")
     private String houseType;
-
-    @Column(name = "SELL_TYPE")
     private String sellType;
-
-    @Column(name = "TOTAL_AREA")
     private Float totalArea;
-
-    @Column(name = "ROOMS_AREA")
     private Float roomsArea;
-
-    @Column(name = "LIVING_AREA")
     private Float livingArea;
-
-    @Column(name = "WINDOW")
     private String window;
-
-    @Column(name = "PHONE")
     private String phone;
-
-    @Column(name = "REPAIRS")
     private String repairs;
-
-    @Column(name = "PRICE")
     private Integer price;
-
-    @Column(name = "ADDRESS")
     private String address;
+    private Boolean isFirstFloor;
+    private Boolean isLastFloor;
+    private Double distanceToCenter;
+    private MetroInfo metroInfo;
+    private HouseType houseTypeEnum;
+    private BuildingType buildingType;
 
     public Apartment() {}
 
-    public Long getId() {
-        return id;
+    public Complex getComplex() {
+        return complex;
+    }
+
+    public void setComplex(Complex complex) {
+        this.complex = complex;
     }
 
     public String getCianId() {
@@ -87,14 +43,6 @@ public class Apartment {
 
     public void setCianId(String cianId) {
         this.cianId = cianId;
-    }
-
-    public Complex getComplex() {
-        return complex;
-    }
-
-    public void setComplex(Complex complex) {
-        this.complex = complex;
     }
 
     public String getUrl() {
@@ -191,5 +139,53 @@ public class Apartment {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Boolean getFirstFloor() {
+        return isFirstFloor;
+    }
+
+    public void setFirstFloor(Boolean firstFloor) {
+        isFirstFloor = firstFloor;
+    }
+
+    public Boolean getLastFloor() {
+        return isLastFloor;
+    }
+
+    public void setLastFloor(Boolean lastFloor) {
+        isLastFloor = lastFloor;
+    }
+
+    public Double getDistanceToCenter() {
+        return distanceToCenter;
+    }
+
+    public void setDistanceToCenter(Double distanceToCenter) {
+        this.distanceToCenter = distanceToCenter;
+    }
+
+    public MetroInfo getMetroInfo() {
+        return metroInfo;
+    }
+
+    public void setMetroInfo(MetroInfo metroInfo) {
+        this.metroInfo = metroInfo;
+    }
+
+    public HouseType getHouseTypeEnum() {
+        return houseTypeEnum;
+    }
+
+    public void setHouseTypeEnum(HouseType houseTypeEnum) {
+        this.houseTypeEnum = houseTypeEnum;
+    }
+
+    public BuildingType getBuildingType() {
+        return buildingType;
+    }
+
+    public void setBuildingType(BuildingType buildingType) {
+        this.buildingType = buildingType;
     }
 }

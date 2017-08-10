@@ -9,8 +9,8 @@ import org.snoopdesigns.props.parser.extractor.ElementTextExtractor;
 import org.snoopdesigns.props.parser.extractor.ExtractKey;
 import org.snoopdesigns.props.parser.extractor.TableDataExtractor;
 import org.snoopdesigns.props.parser.extractor.ValueParsers;
-import org.snoopdesigns.props.persistence.entities.Apartment;
-import org.snoopdesigns.props.persistence.entities.FloorInfo;
+import org.snoopdesigns.props.crawler.nextgen.entities.Apartment;
+import org.snoopdesigns.props.crawler.nextgen.entities.FloorInfo;
 import org.springframework.stereotype.Component;
 
 @Component

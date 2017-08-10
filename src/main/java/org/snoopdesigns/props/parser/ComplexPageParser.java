@@ -2,7 +2,7 @@ package org.snoopdesigns.props.parser;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.snoopdesigns.props.persistence.entities.Complex;
+import org.snoopdesigns.props.crawler.nextgen.entities.Complex;
 import org.springframework.stereotype.Component;
 
 @Component

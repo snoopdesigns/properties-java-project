@@ -1,6 +1,6 @@
 package org.snoopdesigns.props.parser.extractor;
 
-import org.snoopdesigns.props.persistence.entities.FloorInfo;
+import org.snoopdesigns.props.crawler.nextgen.entities.FloorInfo;
 
 public class ValueParsers {
 

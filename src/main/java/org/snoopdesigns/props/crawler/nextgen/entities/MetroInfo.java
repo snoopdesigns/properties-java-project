@@ -1,4 +1,4 @@
-package org.snoopdesigns.props.ml.entity;
+package org.snoopdesigns.props.crawler.nextgen.entities;
 
 public class MetroInfo {
 

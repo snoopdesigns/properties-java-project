@@ -1,8 +1,5 @@
-package org.snoopdesigns.props.persistence.entities;
+package org.snoopdesigns.props.crawler.nextgen.entities;
 
-/**
- * Created by dmmorozo on 28.07.2017.
- */
 public class FloorInfo {
 
     private Integer floorNumber;

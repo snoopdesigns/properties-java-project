@@ -3,12 +3,11 @@ package org.snoopdesigns.props.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.snoopdesigns.props.persistence.entities.Apartment;
+import org.snoopdesigns.props.crawler.nextgen.entities.Apartment;
+import org.snoopdesigns.props.persistence.PersistenceServiceImpl;
 import org.snoopdesigns.props.persistence.repository.ApartmentsFilterRepository;
-import org.snoopdesigns.props.persistence.repository.ApartmentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ApartmentsController {
 
     @Autowired
-    private ApartmentsRepository apartmentsRepository;
+    private PersistenceServiceImpl persistenceService;
 
     @Autowired
     private ApartmentsFilterRepository apartmentsFilterRepository;
@@ -35,8 +34,6 @@ public class ApartmentsController {
     @RequestMapping(value = "/load")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Apartment> load() throws Exception {
-        List<Apartment> apartments = new ArrayList<>();
-        apartments.addAll(apartmentsRepository.findAll());
-        return apartments;
+        return persistenceService.getAllApartments();
     }
 }

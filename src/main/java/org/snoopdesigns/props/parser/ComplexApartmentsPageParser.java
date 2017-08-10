@@ -1,11 +1,10 @@
-package org.snoopdesigns.props.crawler.nextgen;
+package org.snoopdesigns.props.parser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.snoopdesigns.props.parser.AbstractParser;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,9 +15,11 @@ public class ComplexApartmentsPageParser extends AbstractParser<List<String>> {
         Elements apartmentElements = bodyDocument.getElementsByAttributeValueStarting("class", "offer--");
         for (Element apartmentElement : apartmentElements) {
             if (apartmentElement.children().size() > 0) {
-                String apartmentUrl = apartmentElement.children().first().attributes().get("href");
-                if (apartmentUrl != null) {
-                    result.add(apartmentUrl);
+                if (apartmentElement.children().first().tag().getName().equals("a")) {
+                    String apartmentUrl = apartmentElement.children().first().attributes().get("href");
+                    if (apartmentUrl != null) {
+                        result.add(apartmentUrl);
+                    }
                 }
             }
         }

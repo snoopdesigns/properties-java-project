@@ -1,4 +1,4 @@
-package org.snoopdesigns.props.crawler.nextgen;
+package org.snoopdesigns.props.parser;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.snoopdesigns.props.parser.AbstractParser;
 import org.springframework.stereotype.Component;
 
 @Component

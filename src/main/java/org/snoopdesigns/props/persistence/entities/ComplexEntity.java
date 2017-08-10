@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "COMPLEXES")
-public class Complex {
+public class ComplexEntity {
 
     @Id
     @Column(name = "ID")
@@ -34,18 +34,17 @@ public class Complex {
     private Float lng;
 
     @OneToMany(mappedBy="complex")
-    private List<Apartment> apartments;
+    private List<ApartmentEntity> apartments;
 
-    public Complex() {}
-
-    public Complex(Integer cianId, String name, String address) {
-        this.cianId = cianId;
-        this.name = name;
-        this.address = address;
+    public ComplexEntity() {
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getCianId() {
@@ -88,11 +87,11 @@ public class Complex {
         this.lng = lng;
     }
 
-    public List<Apartment> getApartments() {
+    public List<ApartmentEntity> getApartments() {
         return apartments;
     }
 
-    public void setApartments(List<Apartment> apartments) {
+    public void setApartments(List<ApartmentEntity> apartments) {
         this.apartments = apartments;
     }
 }

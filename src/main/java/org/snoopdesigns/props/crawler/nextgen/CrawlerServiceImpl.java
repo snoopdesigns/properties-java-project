@@ -3,7 +3,6 @@ package org.snoopdesigns.props.crawler.nextgen;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.code.geocoder.model.LatLng;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -11,11 +10,12 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.snoopdesigns.props.crawler.CrawlParameters;
+import org.snoopdesigns.props.crawler.nextgen.entities.Apartment;
+import org.snoopdesigns.props.crawler.nextgen.entities.Complex;
 import org.snoopdesigns.props.parser.ApartmentPageParser;
+import org.snoopdesigns.props.parser.ComplexApartmentsPageParser;
 import org.snoopdesigns.props.parser.ComplexPageParser;
-import org.snoopdesigns.props.persistence.entities.Apartment;
-import org.snoopdesigns.props.persistence.entities.Complex;
+import org.snoopdesigns.props.parser.ComplexesPageParser;
 import org.snoopdesigns.props.services.GeocoderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,17 +61,11 @@ public class CrawlerServiceImpl {
                         if (j == 0) {
                             complex = this.processComplexPage(complexApartmentsPageUrl, this.getHttpContents(complexApartmentsPageUrl));
                             complex.setCianId(Integer.valueOf(complexId));
-                            LatLng latLng = geocoderService.geocodeLocation(complex.getAddress());
-                            complex.setLat(latLng.getLat().floatValue());
-                            complex.setLng(latLng.getLng().floatValue());
                             complexes.add(complex);
                         }
                         List<String> apartmentUrls = this.processComplexApartmentsPage(complexesPageUrl, this.getHttpContents(complexApartmentsPageUrl));
                         for (String apartmentUrl : apartmentUrls) {
                             Apartment apartment = this.processApartmentPage(apartmentUrl, this.getHttpContents(apartmentUrl));
-                            if (complex.getApartments() == null) {
-                                complex.setApartments(new ArrayList<>());
-                            }
                             if (totalNum < parameters.getMaxPages()) {
                                 apartment.setComplex(complex);
                                 complex.getApartments().add(apartment);
@@ -134,6 +128,31 @@ public class CrawlerServiceImpl {
             System.out.println("http://cian.ru" + url);
             System.out.println(response.getStatusLine());
             return EntityUtils.toString(response.getEntity());
+        }
+    }
+
+    public static class CrawlParameters {
+
+        private Integer maxPages;
+        private boolean singleRoom;
+        private boolean doubleRoom;
+
+        public CrawlParameters(Integer maxPages, boolean singleRoom, boolean doubleRoom) {
+            this.maxPages = maxPages;
+            this.singleRoom = singleRoom;
+            this.doubleRoom = doubleRoom;
+        }
+
+        public Integer getMaxPages() {
+            return maxPages;
+        }
+
+        public boolean isSingleRoom() {
+            return singleRoom;
+        }
+
+        public boolean isDoubleRoom() {
+            return doubleRoom;
         }
     }
 }

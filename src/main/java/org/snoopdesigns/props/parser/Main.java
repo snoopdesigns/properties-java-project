@@ -13,7 +13,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.snoopdesigns.props.persistence.entities.Apartment;
+import org.snoopdesigns.props.crawler.nextgen.entities.Apartment;
 
 public class Main {
 

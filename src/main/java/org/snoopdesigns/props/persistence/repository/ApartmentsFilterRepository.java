@@ -1,11 +1,11 @@
 package org.snoopdesigns.props.persistence.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.snoopdesigns.props.controllers.ApartmentsFilter;
-import org.snoopdesigns.props.persistence.entities.Apartment;
+import org.snoopdesigns.props.crawler.nextgen.entities.Apartment;
+import org.snoopdesigns.props.persistence.PersistenceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +13,11 @@ import org.springframework.stereotype.Component;
 public class ApartmentsFilterRepository {
 
     @Autowired
-    private ApartmentsRepository apartmentsRepository;
+    private PersistenceServiceImpl persistenceService;
 
     public List<Apartment> findWithFilter(ApartmentsFilter af) {
-        List<Apartment> apartments = new ArrayList<>();
-        apartments.addAll(apartmentsRepository.findAll());
+        List<Apartment> apartments = this.persistenceService.getAllApartments();
         return apartments.stream()
-                .filter(a -> af.getId() == null || af.getId().isEmpty() || (a.getId() != null && a.getId().toString().startsWith(af.getId())))
                 .filter(a -> af.getCianId() == null || af.getCianId().isEmpty() || (a.getCianId() != null && a.getCianId().startsWith(af.getCianId())))
                 .filter(a -> af.getUrl() == null || af.getUrl().isEmpty() || (a.getUrl() != null && a.getUrl().startsWith(af.getUrl())))
                 .filter(a -> af.getHouseType() == null || af.getHouseType().isEmpty() || (a.getHouseType() != null && a.getHouseType().startsWith(af.getHouseType())))

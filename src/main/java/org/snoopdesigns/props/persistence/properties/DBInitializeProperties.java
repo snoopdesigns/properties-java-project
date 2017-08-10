@@ -46,7 +46,16 @@ public class DBInitializeProperties {
                                 "PRICE INTEGER, " +
                                 "PHONE varchar(30), " +
                                 "REPAIRS varchar(30), " +
-                                "ADDRESS varchar(30))");
+                                "ADDRESS varchar(30), " +
+                                "IS_FIRST_FLOOR varchar(30), " +
+                                "IS_LAST_FLOOR varchar(30), " +
+                                "DISTANCE_TO_CENTER double, " +
+                                "DISTANCE_TO_METRO double, " +
+                                "METRO_NAME varchar(40), " +
+                                "METRO_LAT REAL, " +
+                                "METRO_LNG REAL, " +
+                                "HOUSE_TYPE_ENUM varchar(30), " +
+                                "BUILDING_TYPE varchar(30))");
                 statement.executeUpdate(
                         "CREATE TABLE COMPLEXES(" +
                                 "ID INTEGER Primary key, " +

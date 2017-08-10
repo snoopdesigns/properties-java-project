@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import org.snoopdesigns.props.persistence.entities.Apartment;
+import org.snoopdesigns.props.crawler.nextgen.entities.Apartment;
 
 public class CustomApartmentsSerializer extends JsonSerializer<Apartment> {
 
@@ -13,7 +13,6 @@ public class CustomApartmentsSerializer extends JsonSerializer<Apartment> {
     public void serialize(Apartment apartment, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeStartObject();
 
-        jsonGenerator.writeObjectField("id", apartment.getId());
         jsonGenerator.writeObjectField("cianId", apartment.getCianId());
         jsonGenerator.writeObjectField("url", apartment.getUrl());
         jsonGenerator.writeObjectField("houseType", apartment.getHouseType());

@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.snoopdesigns.props.ml.entity.MetroInfo;
+import org.snoopdesigns.props.crawler.nextgen.entities.MetroInfo;
 
 public class Utils {
 
