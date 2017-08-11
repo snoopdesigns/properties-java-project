@@ -3,6 +3,10 @@ package org.snoopdesigns.props.crawler.nextgen.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.snoopdesigns.props.controllers.CustomComplexSerializer;
+
+@JsonSerialize(using=CustomComplexSerializer.class)
 public class Complex {
 
     private Integer cianId;

@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.snoopdesigns.props.crawler.nextgen.entities.Apartment;
 import org.snoopdesigns.props.persistence.PersistenceServiceImpl;
-import org.snoopdesigns.props.persistence.repository.ApartmentsFilterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,13 +21,13 @@ public class ApartmentsController {
     private PersistenceServiceImpl persistenceService;
 
     @Autowired
-    private ApartmentsFilterRepository apartmentsFilterRepository;
+    private FilteringService filteringService;
 
     @RequestMapping(method = RequestMethod.POST, value = "/load")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Apartment> loadWithFilter(@RequestBody ApartmentsFilter apartmentsFilter,
                                           HttpServletRequest request) throws Exception {
-        return apartmentsFilterRepository.findWithFilter(apartmentsFilter);
+        return filteringService.findWithFilter(apartmentsFilter);
     }
 
     @RequestMapping(value = "/load")

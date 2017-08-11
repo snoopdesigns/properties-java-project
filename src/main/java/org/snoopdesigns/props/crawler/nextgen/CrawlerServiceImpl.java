@@ -124,9 +124,6 @@ public class CrawlerServiceImpl {
         }
 
         try (CloseableHttpResponse response = httpclient.execute(target, request)) {
-            System.out.println("----------------------------------------");
-            System.out.println("http://cian.ru" + url);
-            System.out.println(response.getStatusLine());
             return EntityUtils.toString(response.getEntity());
         }
     }

@@ -12,14 +12,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.snoopdesigns.props.controllers.CustomApartmentsSerializer;
 import org.snoopdesigns.props.crawler.nextgen.entities.BuildingType;
 import org.snoopdesigns.props.crawler.nextgen.entities.HouseType;
 
 @Entity
 @Table(name = "APARTMENTS")
-@JsonSerialize(using=CustomApartmentsSerializer.class)
 public class ApartmentEntity {
 
     @Id

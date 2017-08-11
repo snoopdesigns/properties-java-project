@@ -28,8 +28,8 @@ public class DataLoaderService {
     @Value("${proxyPort:#{null}}")
     private Integer proxyPort;
 
-    public void loadData() {
-        List<Complex> complexes = this.crawlerService.startCrawling(new CrawlerServiceImpl.CrawlParameters(10, true, false));
+    public void loadData(Integer maxPages) {
+        List<Complex> complexes = this.crawlerService.startCrawling(new CrawlerServiceImpl.CrawlParameters(maxPages, true, false));
         complexes.forEach(c -> dataPreprocessor.preprocessData(c));
         complexes.forEach(c -> persistenceService.saveComplex(c));
     }

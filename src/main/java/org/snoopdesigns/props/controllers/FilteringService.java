@@ -1,16 +1,16 @@
-package org.snoopdesigns.props.persistence.repository;
+package org.snoopdesigns.props.controllers;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.snoopdesigns.props.controllers.ApartmentsFilter;
 import org.snoopdesigns.props.crawler.nextgen.entities.Apartment;
+import org.snoopdesigns.props.crawler.nextgen.entities.Complex;
 import org.snoopdesigns.props.persistence.PersistenceServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ApartmentsFilterRepository {
+public class FilteringService {
 
     @Autowired
     private PersistenceServiceImpl persistenceService;
@@ -28,6 +28,14 @@ public class ApartmentsFilterRepository {
                 .filter(a -> af.getPrice() == null || af.getPrice().isEmpty() || (a.getPrice() != null && a.getPrice().toString().startsWith(af.getPrice())))
                 .filter(a -> af.getAddress() == null || af.getAddress().isEmpty() || (a.getAddress() != null && a.getAddress().startsWith(af.getAddress())))
                 .filter(a -> af.getComplexName() == null || af.getComplexName().isEmpty() || (a.getComplex() != null && a.getComplex().getName() != null && a.getComplex().getName().startsWith(af.getComplexName())))
+                .collect(Collectors.toList());
+    }
+
+    public List<Complex> findWithFilter(ComplexesFilter af) {
+        List<Complex> complexes = this.persistenceService.getAllComplexes();
+        return complexes.stream()
+                .filter(a -> af.getName() == null || af.getName().isEmpty() || (a.getCianId() != null && a.getName().startsWith(af.getName())))
+                .filter(a -> af.getAddress() == null || af.getAddress().isEmpty() || (a.getAddress() != null && a.getAddress().startsWith(af.getAddress())))
                 .collect(Collectors.toList());
     }
 }
