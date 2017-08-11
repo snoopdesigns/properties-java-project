@@ -1,7 +1,10 @@
 package org.snoopdesigns.props.crawler.nextgen;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -115,6 +118,7 @@ public class CrawlerServiceImpl {
         HttpHost target = new HttpHost("www.cian.ru", 80, "http");
         HttpGet request = new HttpGet(url);
         request.addHeader("User-Agent", USER_AGENT);
+        request.addHeader("Cookie", this.getAntibotCookie());
         if (proxyHost != null && proxyPort != null) {
             HttpHost proxy = new HttpHost(proxyHost, proxyPort, "http");
             RequestConfig config = RequestConfig.custom()
@@ -126,6 +130,21 @@ public class CrawlerServiceImpl {
         try (CloseableHttpResponse response = httpclient.execute(target, request)) {
             return EntityUtils.toString(response.getEntity());
         }
+    }
+
+    private String getAntibotCookie() {
+        StringBuilder result = new StringBuilder("");
+        File file = new File(this.getClass().getClassLoader().getResource("antibot/cookies.txt").getFile());
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                result.append(line);
+            }
+            scanner.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result.toString();
     }
 
     public static class CrawlParameters {
